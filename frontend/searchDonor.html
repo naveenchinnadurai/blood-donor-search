@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Search Donors Section -->
+    <section id="search"
+        class="bg-transparent backdrop-blur-lg p-8 my-8 mx-auto w-2/5 border border-gray-300 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-bold text-center mb-6">Search Donors</h2>
+        <form id="search-form" class="flex flex-col items-center">
+            <label for="district" class="mb-2">District:</label>
+            <input type="text" id="district" name="district" class="p-2 mb-5 border border-gray-300 rounded-md w-full">
+
+            <label for="blood-group" class="mb-2">Blood Group:</label>
+            <select id="blood-group" name="bloodGroup" class="p-2 mb-5 border border-gray-300 rounded-md w-full">
+                <option value="A+">A+</option>
+                <option value="B+">B+</option>
+                <option value="O+">O+</option>
+                <option value="A-">A-</option>
+                <option value="B-">B-</option>
+            </select>
+
+            <label for="donation-type" class="mb-2">Donation Type:</label>
+            <select id="donation-type" name="donationType" class="p-2 mb-5 border border-gray-300 rounded-md w-full">
+                <option value="blood">Blood</option>
+                <option value="organ">Organ</option>
+            </select>
+
+            <button id="search-btn"
+                class="bg-gray-800 text-white py-2 px-6 rounded-md mt-4 cursor-pointer hover:bg-gray-700">Search</button>
+        </form>
+    </section>
+
+    <!-- My Donations Section -->
+   <!--  <section id="my-donations"
+        class="bg-transparent backdrop-blur-lg p-8 my-8 mx-auto w-2/5 border border-gray-300 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-bold text-center mb-6">My Donations</h2>
+        <div id="my-donations-list" class="mt-5"></div>
+    </section> -->
+
+</body>
+
+</html>

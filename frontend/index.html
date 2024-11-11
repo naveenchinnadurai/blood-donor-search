@@ -1,241 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blood and Organ Donation Website</title>
-    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>    
+
+<body class="font-sans text-gray-900 bg-[url('./background.jpg')] bg-cover bg-center h-64 w-full">
     <!-- Navigation Bar -->
-    <nav>
-        <ul>
-            <li><a href="#register">Register</a></li>
+    <!--   <nav class="bg-teal-200 text-gray-900 py-4 text-center">
+        <ul class="flex justify-center space-x-4">
+            <li><a href="#register" class="text-gray-900 no-underline">Register</a></li>
         </ul>
-    </nav>
+    </nav> -->
 
     <!-- Login Section -->
-    <section id="register">
-                <h2>Register</h2>
-                <form class="register-form" action="register.php" method="post">
-                    <label for="name">Name:</label>
-                    <input type="text" id="name" name="name" required>
-                    <label for="phone">Phone:</label>
-                    <input type="text" id="phone" name="phone" required>
-                    <label for="otp">OTP:</label>
-                    <input type="text" id="otp" name="otp" required>
-                    <button type="submit">Register</button>
-                    <p>Already registered? <a href="file:///D:/website/page%202.html">Sign In</a></p>
-                </form>
+    <section id="register"
+        class="bg-white bg-opacity-50 backdrop-blur-md p-8 m-8 mx-auto w-full max-w-lg rounded-lg shadow-md">
+        <h2 class="text-2xl font-semibold text-center mb-6">Register</h2>
+        <form class="flex flex-col font-bold" method="post">
+            <label for="name" class="mb-2">Name</label>
+            <input type="text" id="name" name="name" required class="px-6 py-2 mb-4 border border-gray-300 rounded ">
+            <label for="phone" class="mb-2">Phone</label>
+            <input type="text" id="phone" name="phone" required class="px-6 py-2 mb-4 border border-gray-300 rounded ">
+            <label for="otp" class="mb-2">OTP</label>
+            <input type="text" id="otp" name="otp" required class="px-4 py-2 mb-4 border border-gray-300 rounded ">
+            <button type="submit"
+                class="bg-gray-800 text-white px-6 py-2 rounded shadow hover:bg-gray-700">Register</button>
+            <p class="mt-4">Already registered? <a href="file:///D:/website/page%202.html"
+                    class="text-blue-600 font-medium hover:underline">Sign In</a></p>
+        </form>
     </section>
-    <style>
-        /* Global Styles */
+</body>
 
-        * {
-            box-sizing:border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #151515;
-            background-image: url('assests/background\ 2.webp')
-        }
-
-        /* Navigation Bar */
-
-        nav {
-            background-color: #8ed6d6;
-            color: #0b0b0b;
-            padding: 1em;
-            text-align: center;
-        }
-
-        nav ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        nav li {
-            margin-right: 20px;
-        }
-
-        nav a {
-            color: #0d0d0d;
-            text-decoration:none;
-        }
-
-        /* Login Section */
-
-        
-        
-        .register-form {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-        }
-        
-        .form-group {
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-          margin-bottom: 20px;
-        }
-        
-        .form-group label {
-          width: 100px;
-          text-align: right;
-          margin-right: 10px;
-        }
-        
-        .register-form input {
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            width: 40%;
-            box-sizing: border-box;
-          }
-          
-
-        
-        #register {
-            background-color:transparent;
-            backdrop-filter: blur(20px);
-            padding: 2em;
-            margin: 2em auto;
-            width: 40%;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        #register-form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        #register-form label {
-            margin-bottom: 10px;
-        }
-
-        #donation-form input, #donation-form select {
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        #donate-btn {
-            background-color: #333;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-  
-
-        #donate {
-            background-color:transparent;
-            backdrop-filter: blur(20px);
-            padding: 2em;
-            margin: 2em auto;
-            width: 40%;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        #donation-form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        #donation-form label {
-            margin-bottom: 10px;
-        }
-
-        #donation-form input, #donation-form select {
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        #donate-btn {
-            background-color: #333;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        /* Search Donors Section */
-
-        #search {
-            background-color:transparent;
-            backdrop-filter: blur(20px);
-            padding: 2em;
-            margin: 2em auto;
-            width: 40%;
-            min-height:20px ;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        #search-form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        #search-form label {
-            margin-bottom: 10px;
-        }
-
-        #search-form input, #search-form select {
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        #search-btn {
-            background-color: #333;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        #search-results {
-            margin-top: 20px;
-        }
-
-        /* My Donations Section */
-
-        #my-donations {
-            background-color:transparent;
-            backdrop-filter: blur(20px);
-            padding: 2em;
-            margin: 2em auto;
-            width: 40%;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        #my-donations-list {
-            margin-top: 20px;
-        }    
+</html>
