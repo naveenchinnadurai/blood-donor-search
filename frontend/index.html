@@ -8,7 +8,8 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
-<body class="font-sans text-gray-900 bg-[url('./background.jpg')] bg-cover bg-center h-64 w-full">
+<body class="font-sans text-gray-900  bg-cover  bg-center h-full w-full"
+    style="background-image: url('./assests/background.jpg');">
     <!-- Navigation Bar -->
     <!--   <nav class="bg-teal-200 text-gray-900 py-4 text-center">
         <ul class="flex justify-center space-x-4">
@@ -17,8 +18,7 @@
     </nav> -->
 
     <!-- Login Section -->
-    <section id="register"
-        class="bg-white bg-opacity-50 backdrop-blur-md p-8 m-8 mx-auto w-full max-w-lg rounded-lg shadow-md">
+    <section class="bg-white bg-opacity-50 backdrop-blur-md p-8 m-8 mx-auto w-full max-w-lg rounded-lg shadow-md">
         <h2 class="text-2xl font-semibold text-center mb-6">Register</h2>
         <form class="flex flex-col font-bold" method="post">
             <label for="name" class="mb-2">Name</label>
@@ -28,8 +28,8 @@
             <label for="otp" class="mb-2">OTP</label>
             <input type="text" id="otp" name="otp" required class="px-4 py-2 mb-4 border border-gray-300 rounded ">
             <button type="submit"
-                class="bg-gray-800 text-white px-6 py-2 rounded shadow hover:bg-gray-700">Register</button>
-            <p class="mt-4">Already registered? <a href="file:///D:/website/page%202.html"
+                class="bg-gray-800 text-white py-4 px-6  rounded shadow hover:bg-gray-700">Register</button>
+            <p class="mt-4 text-center ">Already registered? <a href="file:///D:/website/page%202.html"
                     class="text-blue-600 font-medium hover:underline">Sign In</a></p>
         </form>
     </section>
