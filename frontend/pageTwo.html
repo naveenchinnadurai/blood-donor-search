@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood and Organ Donation Website</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-cover bg-center text-gray-900 font-sans bg-[url('./back.jpg')]">
+   <!--  <nav class="bg-teal-300 text-black p-4 text-center">
+        <ul class="flex justify-between list-none">
+            <li class="mr-5"><a href="#donate" class="text-black no-underline">Donate</a></li>
+            <li class="mr-5"><a href="#search" class="text-black no-underline">Search Donors</a></li>
+            <li><a href="#my-donations" class="text-black no-underline">My Donations</a></li>
+        </ul>
+    </nav> -->
+
+    <!-- Donation Form Section -->
+    <section id="donate" class="bg-transparent backdrop-blur-lg p-8  mt-10 mx-auto my-auto w-2/5 items-center p-10 mt border border-gray-300 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-bold text-center mb-6">Donate Blood or Organ</h2>
+        <form id="donation-form" class="flex flex-col font-bold">
+            <label for="name" class="mb-2">Name:</label>
+            <input type="text" id="name" name="name" required class="p-2 mb-5 border border-gray-300 rounded-md w-full">
+
+            <label for="blood-group" class="mb-2">Blood Group:</label>
+            <select id="blood-group" name="bloodGroup" class="p-2 mb-5 border border-gray-300 rounded-md w-full">
+                <option value="A+">A+</option>
+                <option value="B+">B+</option>
+                <option value="O+">O+</option>
+                <option value="A-">A-</option>
+                <option value="B-">B-</option>
+            </select>
+
+            <label for="district" class="mb-2">District:</label>
+            <input type="text" id="district" name="district" class="p-2 mb-5 border border-gray-300 rounded-md w-full">
+
+            <label for="donation-type" class="mb-2 ">Donation Type:</label>
+            <select id="donation-type" name="donationType" class="p-2 mb-5 border border-gray-300 rounded-md w-full">
+                <option value="blood">Blood</option>
+                <option value="organ">Organ</option>
+            </select>
+
+            <button id="donate-btn" class="bg-gray-800 text-white py-4 px-6 rounded-md mt-4 cursor-pointer hover:bg-gray-700">Donate</button>
+        </form>
+    </section>
+
+   
+</body>
+
+</html>
