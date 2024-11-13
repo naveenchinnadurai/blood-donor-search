@@ -8,31 +8,47 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
-<body class="font-sans text-gray-900  bg-cover  bg-center h-full w-full"
-    style="background-image: url('./assests/background.jpg');">
-    <!-- Navigation Bar -->
-    <!--   <nav class="bg-teal-200 text-gray-900 py-4 text-center">
-        <ul class="flex justify-center space-x-4">
-            <li><a href="#register" class="text-gray-900 no-underline">Register</a></li>
-        </ul>
-    </nav> -->
-
-    <!-- Login Section -->
-    <section class="bg-white bg-opacity-50 backdrop-blur-md p-8 m-8 mx-auto w-full max-w-lg rounded-lg shadow-md">
+<body class="font-sans text-gray-900  bg-cover  bg-center h-screen flex items-center w-full"
+    style="background-image: url('./assets/background.jpg');">
+    <section
+        class="bg-white bg-opacity-40 backdrop-blur-2xl p-10 mt-10 mx-auto w-5/6 sm:w-3/5 lg:w-2/5 border border-gray-300 rounded-lg shadow-lg">
         <h2 class="text-2xl font-semibold text-center mb-6">Register</h2>
-        <form class="flex flex-col font-bold" method="post">
-            <label for="name" class="mb-2">Name</label>
-            <input type="text" id="name" name="name" required class="px-6 py-2 mb-4 border border-gray-300 rounded ">
-            <label for="phone" class="mb-2">Phone</label>
-            <input type="text" id="phone" name="phone" required class="px-6 py-2 mb-4 border border-gray-300 rounded ">
-            <label for="otp" class="mb-2">OTP</label>
-            <input type="text" id="otp" name="otp" required class="px-4 py-2 mb-4 border border-gray-300 rounded ">
-            <button type="submit"
-                class="bg-gray-800 text-white py-4 px-6  rounded shadow hover:bg-gray-700">Register</button>
-            <p class="mt-4 text-center ">Already registered? <a href="file:///D:/website/page%202.html"
-                    class="text-blue-600 font-medium hover:underline">Sign In</a></p>
+        <form class="flex flex-col font-bold gap-3" method="post" id="register-form">
+            <div class="flex flex-col gap-1">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter Your Name" required class="p-2 border border-gray-300 rounded-md w-full">
+            </div>
+            <div class="flex flex-col gap-1">
+                <label for="phone">Phone</label>
+                <input type="text" id="phone" name="phone" placeholder="Enter Phone No." required class="p-2 border border-gray-300 rounded-md w-full">
+            </div>
+           <div class="flex flex-col gap-1">
+                <label for="otp">OTP</label>
+                <input type="text" id="otp" name="otp" placeholder="Enter otp" required class="p-2 border border-gray-300 rounded-md w-full">
+           </div>
+            <div class="flex justify-end mt-2">
+                <button type="submit" class="bg-gray-800 text-white py-3 px-7 rounded-lg shadow hover:bg-gray-700">
+                    Next
+                </button>
+            </div>
         </form>
     </section>
+    <script>
+        document.getElementById('register-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const formData = {
+                name: document.getElementById('name').value,
+                phoneNumber: document.getElementById('phone').value,
+            };
+
+            console.log('Form Data:', formData);
+
+            localStorage.setItem('data', JSON.stringify(formData))
+
+            window.location.href = './register.html';
+        });
+    </script>
 </body>
 
 </html>

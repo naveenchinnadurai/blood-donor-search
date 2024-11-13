@@ -8,42 +8,89 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
-<body style="background-image: url('./assests/background.jpg');" class="bg-cover ">
+<body style="background-image: url('./assets/background.jpg');" class="bg-cover h-screen flex justify-center">
     <!-- Search Donors Section -->
-    <section id="search"
-        class="bg-white bg-opacity-50  backdrop-blur-xl p-8  mt-10 mx-auto my-auto w-2/5 items-center p-10 mt border border-gray-300 rounded-lg shadow-lg">
-        <h2 class="text-2xl font-bold text-center mb-6">Search Donors</h2>
-        <form id="search-form" class="flex flex-col font-bold">
-            <label for="district" class="mb-2">District:</label>
-            <input type="text" id="district" name="district" class="p-2 mb-5 border border-gray-300 rounded-md w-full">
+    <section class="p-4 bg-white lg:p-8 mt-10 w-11/12 md:w-3/4 h-5/6 border border-gray-400 rounded-lg shadow-lg bg-opacity-20 backdrop-blur-2xl border border-white border-opacity-0">
+        <h2 class="text-2xl font-bold text-center mb-6">Search Donor</h2>
+        <form id="search-form" class=" grid grid-cols-2 md:grid-cols-5 w-full gap-3">
+            <div class="col-span-2 flex flex-col justify-center gap-2">
+                <label for="district" class="block font-bold">District:</label>
+                <input type="text" id="district" name="district" class="p-2 border border-gray-300 rounded-md w-full"
+                    placeholder="Enter district">
+            </div>
 
-            <label for="blood-group" class="mb-2">Blood Group:</label>
-            <select id="blood-group" name="bloodGroup" class="p-2 mb-5 border border-gray-300 rounded-md w-full">
-                <option value="A+">A+</option>
-                <option value="B+">B+</option>
-                <option value="O+">O+</option>
-                <option value="A-">A-</option>
-                <option value="B-">B-</option>
-            </select>
+            <div class="flex flex-col justify-center gap-2">
+                <label for="blood-group" class="block font-bold">Blood Group:</label>
+                <select id="blood-group" name="bloodGroup" class="p-2 border border-gray-300 rounded-md w-full">
+                    <option value="All">All</option>
+                    <option value="A+ve">A+ve</option>
+                    <option value="B+ve">B+ve</option>
+                    <option value="O+ve">O+ve</option>
+                    <option value="A-ve">A-ve</option>
+                    <option value="B-ve">B-ve</option>
+                    <option value="B-ve">AB+ve</option>
+                </select>
+            </div>
 
-            <label for="donation-type" class="mb-2">Donation Type:</label>
-            <select id="donation-type" name="donationType" class="p-2 mb-5 border border-gray-300 rounded-md w-full">
-                <option value="blood">Blood</option>
-                <option value="organ">Organ</option>
-            </select>
+            <div class="flex flex-col justify-center gap-2">
+                <label for="donation-type" class="block font-bold">Donation Type:</label>
+                <select id="donation-type" name="donationType" class="p-2 border border-gray-300 rounded-md w-full">
+                    <option value="blood">Blood</option>
+                    <option value="organ">Organ</option>
+                </select>
+            </div>
 
-            <button id="search-btn"
-                class="bg-gray-800 text-white py-4 px-6 rounded-md mt-4 cursor-pointer hover:bg-gray-700">Search</button>
+            <div class="flex justify-center items-end col-span-2 md:col-span-1">
+                <button id="search-btn" type="button"
+                    class="bg-gray-800 text-white py-2 inline w-full px-6 rounded-md hover:bg-gray-700">
+                    Search
+                </button>
+            </div>
         </form>
+        <div class="">
+            <div id="donor-cards" class="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 gap-6 px-5 py-8"></div>
+        </div>
     </section>
 
-    <!-- My Donations Section -->
-    <!--  <section id="my-donations"
-        class="bg-transparent backdrop-blur-lg p-8 my-8 mx-auto w-2/5 border border-gray-300 rounded-lg shadow-lg">
-        <h2 class="text-2xl font-bold text-center mb-6">My Donations</h2>
-        <div id="my-donations-list" class="mt-5"></div>
-    </section> -->
+    <script>
+        document.getElementById("search-btn").addEventListener("click", function () {
+            const searchData = {
+                district: document.getElementById("district").value,
+                bloodGroup: document.getElementById("blood-group").value,
+                donationType: document.getElementById("donation-type").value
+            };
 
+            console.log(searchData);
+            async function fetchDonors(location, bloodGroup) {
+                try {
+                    const response = await fetch(`http://localhost:7000/api/v1/donors/${location}/${bloodGroup}/`);
+                    const data = await response.json();
+                    console.log(data);
+                    displayDonorCards(data.donors);
+                    return;
+                } catch (error) {
+                    console.error('Error fetching donors:', error);
+                }
+            }
+            fetchDonors(searchData.district, searchData.bloodGroup)
+
+            function displayDonorCards(donors) {
+                const donorCardsContainer = document.getElementById('donor-cards');
+                donorCardsContainer.innerHTML=null;
+
+                donors.forEach(donor => {
+                    const donorCard = `
+                    <div class="bg-gray-400 bg-opacity-50 p-6 rounded-lg shadow-lg">
+                        <h3 class="text-lg font-medium mb-2">${donor.name}</h3>
+                        <p class="text-gray-700 text-md">Blood Group: <span class="font-semibold">${donor.bloodGroup}</span></p>
+                        <p class="text-gray-700 text-md">District: ${donor.location}</p>
+                        <p class="text-gray-700 text-md">Mobile No.: ${donor.mobileNumber}</p>
+                    </div> `;
+                    donorCardsContainer.innerHTML += donorCard;
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>
