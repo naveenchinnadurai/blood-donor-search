@@ -1,17 +1,18 @@
-import { checkRoute, createDonors, getdonors, getDonorByLocation, getDonorByLocationAndBlood } from '../controllers/donors.controllers';
-import express from 'express';
+import { checkRoute, registerDonor, getdonors, getDonorByLocation, getDonorByLocationAndBlood, getDonorByBlood } from "../controllers/donors.controllers";
+import express from "express";
 
-const router=express.Router();
+const router = express.Router();
 
-router.get('/health-check',checkRoute)
+router.get("/", getdonors);
 
-router.get("/all",getdonors);
+router.get("/health-check", checkRoute);
 
-router.get("/:location",getDonorByLocation);
+router.get("/location/:location", getDonorByLocation);
 
-router.get('/', getDonorByLocationAndBlood)
+router.get("/blood/:blood", getDonorByBlood);
 
-router.post("/",createDonors);
+router.get("/:location/:blood", getDonorByLocationAndBlood);
 
+router.post("/", registerDonor);
 
 export default router;
