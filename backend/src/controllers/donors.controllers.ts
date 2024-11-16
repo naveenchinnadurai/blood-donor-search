@@ -13,7 +13,7 @@ export const checkRoute = async (req: Request, res: Response) => {
 
 // Create a new user
 export const registerDonor = async (req: Request, res: Response) => {
-  const { name, email, mobileNumber, location, bloodGroup } = req.body;
+  const { name, email, mobileNumber, location, bloodGroup, donationType } = req.body;
 
   console.log({ name, email, mobileNumber, location, bloodGroup });
   try {
@@ -23,9 +23,10 @@ export const registerDonor = async (req: Request, res: Response) => {
         name,
         email,
         mobileNumber,
-        location: location.toLowerCase(),
+        location,
         joinedAt: new Date(),
         bloodGroup,
+        donationType
       })
       .returning();
 
@@ -53,10 +54,17 @@ export const getdonors = async (req: Request, res: Response) => {
 export const getDonorByLocation = async (req: Request, res: Response) => {
   const { location } = req.params;
   try {
-    const donorsByLocation = await db
-      .select()
-      .from(donors)
-      .where(eq(donors.location, location));
+    let donorsByLocation;
+    if (location === "All") {
+      donorsByLocation = await db
+        .select()
+        .from(donors);
+    } else {
+      donorsByLocation = await db
+        .select()
+        .from(donors)
+        .where(eq(donors.location, location.toLowerCase()));
+    }
 
     if (donorsByLocation.length == 0) {
       res.json({ message: "No Donors in this location" });
@@ -120,28 +128,37 @@ export const getDonorByLocationAndBlood = async (req: Request, res: Response) =>
   }
 
   try {
-    let donorsByLocation;
-    if (blood === "All") {
-      donorsByLocation = await db
+    let donor;
+    if (blood === "All" && location === "All") {
+      const alldonors = await db.select().from(donors);
+      res.status(200).json({ donors: alldonors });
+      return;
+    } else if (blood === "All") { //select user for location
+      donor = await db
         .select()
         .from(donors)
-        .where(eq(donors.location, location.toLowerCase()));   //select user for location
-    } else {
-      donorsByLocation = await db
+        .where(eq(donors.location, location));
+    } else if (location === "All") {  //select user for blood
+      donor = await db
         .select()
         .from(donors)
-        .where(and(eq(donors.location, location.toLowerCase()), eq(donors.bloodGroup, blood as "All" | "A+ve" | "B+ve" | "O+ve" | "AB+ve" | "A-ve" | "B-ve" | "O-ve" | "AB-ve")));   //select user for location and blood
+        .where(eq(donors.bloodGroup, blood as "A+ve" | "B+ve" | "O+ve" | "AB+ve" | "A-ve" | "B-ve" | "O-ve" | "AB-ve"));
+    } else {  //select user for location and blood
+      donor = await db
+        .select()
+        .from(donors)
+        .where(and(eq(donors.location, location), eq(donors.bloodGroup, blood as "A+ve" | "B+ve" | "O+ve" | "AB+ve" | "A-ve" | "B-ve" | "O-ve" | "AB-ve")));
     }
 
-    console.log(donorsByLocation);
+    console.log(donor);
 
-    if (donorsByLocation.length == 0) {
+    if (donor.length == 0) {
       res.json({ message: "No Donors in this location" });
       return;
     }
 
     res.status(200).json({
-      donors: donorsByLocation,
+      donors: donor,
     });
     return;
   } catch (error) {

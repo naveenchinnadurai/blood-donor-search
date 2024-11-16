@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood and Organ Donation Website</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .glassmorphism {
+            background-color: transparent;
+            backdrop-filter: blur(25px);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body class="bg-cover bg-center text-gray-900 font-sans h-screen flex items-center"
+    style="background-image: url('./assets/background.jpg');">
+    <section id="donate" class="p-10 mt-10 mx-auto w-5/6 sm:w-3/5 lg:w-2/5 rounded-lg glassmorphism">
+        <h2 class="text-2xl font-bold text-center mb-6">Donate Blood or Organ</h2>
+        <form id="donation-form" class="space-y-5">
+            <div class="flex flex-col gap-1">
+                <label for="phone" class="block font-bold">Phone</label>
+                <input type="text" id="phone" name="phone" placeholder="Enter Phone Number" required
+                    class="p-2 border border-gray-300 rounded-md w-full">
+            </div>
+            <div class="flex flex-col gap-1">
+                <label for="blood-group" class="block font-bold">Blood Group</label>
+                <select id="blood-group" name="bloodGroup" required
+                    class="p-2 border border-gray-300 rounded-md w-full">
+                    <option value="" disabled selected>Select Blood Group</option>
+                    <option value="AB-ve">AB+ve</option>
+                    <option value="A+ve">A+</option>
+                    <option value="B+ve">B+</option>
+                    <option value="O+ve">O+</option>
+                    <option value="A-ve">A-</option>
+                    <option value="B-ve">B-</option>
+                    <option value="AB-ve">AB-ve</option>
+                </select>
+            </div>
+            <div class="flex flex-col gap-1">
+                <label for="district" class="block font-bold">District</label>
+                <select id="district" required name="district" class="p-2 border border-gray-300 rounded-md w-full">
+                    <option value="" disabled selected>Select a district</option>
+                    <option value="All">All</option>
+                    <option value="Ariyalur">Ariyalur</option>
+                    <option value="Chengalpattu">Chengalpattu</option>
+                    <option value="Chennai">Chennai</option>
+                    <option value="Coimbatore">Coimbatore</option>
+                    <option value="Cuddalore">Cuddalore</option>
+                    <option value="Dharmapuri">Dharmapuri</option>
+                    <option value="Dindigul">Dindigul</option>
+                    <option value="Erode">Erode</option>
+                    <option value="Kanchipuram">Kanchipuram</option>
+                    <option value="Kanyakumari">Kanyakumari</option>
+                    <option value="Karur">Karur</option>
+                    <option value="Krishnagiri">Krishnagiri</option>
+                    <option value="Madurai">Madurai</option>
+                    <option value="Nagapattinam">Nagapattinam</option>
+                    <option value="Namakkal">Namakkal</option>
+                    <option value="Nilgiris">Nilgiris</option>
+                    <option value="Perambalur">Perambalur</option>
+                    <option value="Pudukkottai">Pudukkottai</option>
+                    <option value="Ramanathapuram">Ramanathapuram</option>
+                    <option value="Salem">Salem</option>
+                    <option value="Sivaganga">Sivaganga</option>
+                    <option value="Tenkasi">Tenkasi</option>
+                    <option value="Tiruchirappalli">Tiruchirappalli</option>
+                    <option value="Tirunelveli">Tirunelveli</option>
+                    <option value="Tiruppur">Tiruppur</option>
+                    <option value="Vellore">Vellore</option>
+                    <option value="Viluppuram">Viluppuram</option>
+                    <option value="Virudhunagar">Virudhunagar</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="donation-type" class="block mb-1 font-bold">Donation Type</label>
+                <select id="donation-type" required name="donationType"
+                    class="p-2 border border-gray-300 rounded-md w-full">
+                    <option value="" disabled selected>Select Donation Type</option>
+                    <option value="Blood">Blood</option>
+                    <option value="Organ">Organ</option>
+                    <option value="Both">Both</option>
+                </select>
+            </div>
+
+            <div class="flex justify-end">
+                <button type="submit" id="donate-btn"
+                    class="bg-gray-800 text-white py-2 px-6 rounded-md mt-4 hover:bg-gray-700">
+                    Register
+                </button>
+            </div>
+        </form>
+    </section>
+
+    <script>
+        document.getElementById('donation-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const data = JSON.parse(localStorage.getItem('data'));
+            console.log(data)
+
+            const formData = {
+                phone: document.getElementById('phone').value,
+                bloodGroup: document.getElementById('blood-group').value,
+                district: document.getElementById('district').value,
+                donationType: document.getElementById('donation-type').value,
+            };
+
+            console.log(formData);
+
+            async function createDonor() {
+                try {
+                    const response = await fetch(`http://localhost:7000/api/v1/donors/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            name: data.name,
+                            email: data.email,
+                            mobileNumber: formData.phone,
+                            location: formData.district,
+                            bloodGroup: formData.bloodGroup,
+                            donationType: formData.donationType
+                        })
+                    });
+                    console.log(response);
+                    const res=JSON.parse(response.data)
+
+                    if(response.ok && res.isSuccess){
+                        alert(res.message)
+                    }
+                    return;
+                } catch (error) {
+                    console.error('Error fetching donors:', error);
+                }
+            }
+            createDonor()
+            window.location.href = './index.html';
+        });
+    </script>
+</body>
+
+</html>
