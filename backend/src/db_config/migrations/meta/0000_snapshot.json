@@ -1,11 +1,11 @@
 {
-  "id": "703f1930-bda4-4202-b339-a7b1556ab0cf",
+  "id": "9d949f20-5986-4c93-916e-d084c8508187",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.users": {
-      "name": "users",
+    "public.donors": {
+      "name": "donors",
       "schema": "",
       "columns": {
         "id": {
@@ -38,25 +38,45 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-11-11 17:59:27.697'"
+          "default": "'2024-11-16 19:00:14.357'"
+        },
+        "location": {
+          "name": "location",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "blood_group": {
+          "name": "blood_group",
+          "type": "blood_groups",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "donation_type": {
+          "name": "donation_type",
+          "type": "donation_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "users_name_unique": {
-          "name": "users_name_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "name"
-          ]
-        },
-        "users_email_unique": {
-          "name": "users_email_unique",
+        "donors_email_unique": {
+          "name": "donors_email_unique",
           "nullsNotDistinct": false,
           "columns": [
             "email"
+          ]
+        },
+        "donors_mobile_number_unique": {
+          "name": "donors_mobile_number_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "mobile_number"
           ]
         }
       },
@@ -65,7 +85,32 @@
       "isRLSEnabled": false
     }
   },
-  "enums": {},
+  "enums": {
+    "public.blood_groups": {
+      "name": "blood_groups",
+      "schema": "public",
+      "values": [
+        "All",
+        "A+ve",
+        "B+ve",
+        "O+ve",
+        "AB+ve",
+        "A-ve",
+        "B-ve",
+        "O-ve",
+        "AB-ve"
+      ]
+    },
+    "public.donation_type": {
+      "name": "donation_type",
+      "schema": "public",
+      "values": [
+        "Both",
+        "Blood",
+        "Organ"
+      ]
+    }
+  },
   "schemas": {},
   "sequences": {},
   "roles": {},

@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from 'cors'; 
 import { Request, Response } from "express";
 import donorsRoutes from './routers/donors.routes';
+import otpRoutes from './routers/otp.routes';
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use('/api/v1/donors/',donorsRoutes);
+app.use('/api/v1/otp/',otpRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is Running on http://localhost:${PORT}`);

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood and Organ Donation Website</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .glassmorphism {
+            backdrop-filter: blur(25px);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body class="font-sans text-gray-900 bg-cover bg-center h-screen flex items-center w-full"
+    style="background-image: url('./assets/background.jpg');">
+    <section class="p-10 mt-10 mx-auto w-5/6 sm:w-3/5 lg:w-2/5 rounded-lg glassmorphism">
+        <h2 class="text-2xl font-semibold text-center mb-6">Register</h2>
+        <form class="flex flex-col font-bold gap-3" method="post" id="register-form">
+            <div class="flex flex-col gap-1">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter Your Name" required
+                    class="bg-opacity-50 p-2 border border-gray-300 rounded-md w-full">
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter Email" required
+                    class="p-2 border border-gray-300 rounded-md w-full">
+            </div>
+            <div class="flex justify-end gap-1">
+                <button type="button" id="sendOTPBtn"
+                    class="bg-gray-800 text-white py-2 px-4 rounded-lg shadow hover:bg-gray-700 w-fit"
+                    onclick="sendOTP()">Send OTP</button>
+            </div>
+
+            <div id="otpSection" class="hidden">
+                <div class="flex flex-col gap-1 mt-3">
+                    <label for="otp">OTP</label>
+                    <input type="text" id="otp" name="otp" placeholder="Enter OTP" required
+                        class="p-2 border border-gray-300 rounded-md w-full">
+                </div>
+                <div class="flex justify-end gap-1 mt-3">
+                    <button type="button" id="verifyBtn"
+                        class="bg-gray-800 text-white py-2 px-4 w-fit rounded-lg shadow hover:bg-gray-700"
+                        onclick="verifyOTP()">Verify</button>
+                </div>
+            </div>
+        </form>
+    </section>
+
+    <script>
+        const name = document.getElementById('name').value;
+
+
+        const sendOTP = async () => {
+            document.getElementById('sendOTPBtn').textContent = 'Sending...';
+            const email = document.getElementById('email').value;
+
+            try {
+                const response = await fetch('http://localhost:7000/api/v1/otp/send', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email })
+                });
+                console.log(response)
+
+                if (response.ok) {
+                    const responseData = await response.json();
+                    console.log('Response Data:', responseData);
+
+                    if (responseData.isSuccess) {
+                        alert(responseData.message);
+                        document.getElementById('otpSection').classList.remove('hidden');
+                        document.getElementById('sendOTPBtn').textContent = 'Resend OTP';
+                    } else {
+                        alert(responseData.message);
+                    }
+                } else {
+                    alert('Error sending OTP');
+                }
+            } catch (error) {
+                console.error('Error sending OTP:', error);
+            }
+        }
+
+        const verifyOTP = async () => {
+            const otp = document.getElementById('otp').value;
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const data = { name, email }
+
+            try {
+                const response = await fetch('http://localhost:7000/api/v1/otp/verify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, otp })
+                });
+
+                const result = await response.json();
+
+                if (result.isSuccess) {
+                    localStorage.setItem('data', JSON.stringify(data))
+                    window.location.href = './register.html';
+                } else {
+                    alert(result.message || 'Invalid OTP');
+                }
+            } catch (error) {
+                console.error('Error verifying OTP:', error);
+            }
+        }
+    </script>
+</body>
+
+</html>

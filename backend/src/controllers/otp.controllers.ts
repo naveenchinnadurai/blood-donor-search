@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
-import { generateRandomString, alphabet } from "oslo/crypto";
 import { transporter } from "../utils";
+import { generate } from "otp-generator";
+import db from "../db_config";
+import { donors } from "../db_config/schema";
+import { eq } from "drizzle-orm";
 
 const otpStorage: Record<string, { otp: string; expiresAt: number; timeoutId: NodeJS.Timeout }> = {};
 
@@ -10,11 +13,20 @@ export const sendOTP = async (req: Request, res: Response) => {
     const { email } = req.body;
 
     if (!email) {
-        return res.status(400).json({ error: "Email is required" });
+        res.status(200).json({ isSuccess:false, error: "Email is required" });
+        return ;
+    }
+
+    const donor= await db.select().from(donors).where(eq(donors.email,email));
+    
+    if(donor.length!=0) {
+        console.log("something")
+        res.status(200).json({isSuccess:false, message:"Donor already exists!"});
+        return ;
     }
 
     try {
-        const otp = generateRandomString(6, alphabet("0-9"));
+        const otp = generate(6, { digits: true, lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false, });
 
         const expiresAt = Date.now() + OTP_EXPIRATION_TIME;
 
@@ -27,51 +39,56 @@ export const sendOTP = async (req: Request, res: Response) => {
         }, OTP_EXPIRATION_TIME);
 
         otpStorage[email] = { otp, expiresAt, timeoutId };
+        console.log(otpStorage)
 
         await transporter.sendMail({
             from: "dev.iamnaveen@gmail.com",
             to: email,
             subject: "Your One-Time Password",
-            text: `Your OTP is: ${otp}\n\nThis OTP will expire in ${OTP_EXPIRATION_TIME / 60 / 1000} minutes.`,
+            text: `Your OTP is: ${otp}, don't share it to anyone.\n\nThis OTP will expire in 5 minutes.`,
         });
 
-        res.status(200).json({ message: "OTP sent successfully" });
+        res.status(200).json({ isSuccess:true, message: "OTP sent successfully" });
     } catch (error) {
-        console.error("Error Sending OTP:", error);
-        res.status(500).json({ error: "Error sending OTP" });
+        res.status(500).json({ error });
     }
 };
 
 export const verifyOTP = async (req: Request, res: Response) => {
+    console.log(otpStorage)
     const { email, otp } = req.body;
 
     if (!email || !otp) {
-        return res.status(400).json({ error: "Email and OTP are required" });
+        res.status(200).json({ isSuccess:false, error: "Email and OTP are required" });
+        return ;
     }
 
     try {
         const storedData = otpStorage[email];
 
         if (!storedData) {
-            return res.status(400).json({ error: "No OTP found for this email" });
+            res.status(200).json({ isSuccess:false, message: "No OTP found!!" });
+            return ;
         }
 
         const { otp: storedOtp, expiresAt, timeoutId } = storedData;
 
         if (Date.now() > expiresAt) {
             delete otpStorage[email];
-            return res.status(400).json({ error: "OTP has expired" });
+            res.status(200).json({ isSuccess:false, message: "OTP has expired" });
+            return ;
         }
 
         if (otp !== storedOtp) {
-            return res.status(400).json({ error: "Invalid OTP" });
+            res.status(200).json({ isSuccess:false, message: "Invalid OTP" });
+            return ;
         }
+        
         clearTimeout(timeoutId);
         delete otpStorage[email];
 
-        res.status(200).json({ message: "OTP verified successfully" });
+        res.status(200).json({ isSuccess:true, message: "OTP verified successfully" });
     } catch (error) {
-        console.error("Error Verifying OTP:", error);
-        res.status(500).json({ error: "Error verifying OTP" });
+        res.status(500).json({ error });
     }
 };
