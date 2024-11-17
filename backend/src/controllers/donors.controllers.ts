@@ -16,6 +16,15 @@ export const registerDonor = async (req: Request, res: Response) => {
   const { name, email, mobileNumber, location, bloodGroup, donationType } = req.body;
 
   console.log({ name, email, mobileNumber, location, bloodGroup });
+
+  const donor= await db.select().from(donors).where(eq(donors.email,email));
+    
+    if(donor.length!=0) {
+        console.log("something")
+        res.status(200).json({isSuccess:false, error:"Donor already exists!"});
+        return ;
+    }
+
   try {
     const newDonor = await db
       .insert(donors)
@@ -31,7 +40,7 @@ export const registerDonor = async (req: Request, res: Response) => {
       .returning();
 
     console.log(newDonor);
-    res.status(201).json(newDonor[0]);
+    res.status(200).json({ donor: newDonor[0], isSuccess: true, message:"Donor joined, Successfully!!" });
     return;
   } catch (error) {
     res.status(500).json({ error });
@@ -131,7 +140,7 @@ export const getDonorByLocationAndBlood = async (req: Request, res: Response) =>
     let donor;
     if (blood === "All" && location === "All") {
       const alldonors = await db.select().from(donors);
-      res.status(200).json({ donors: alldonors });
+      res.status(200).json({ isSuccess:true, donors: alldonors });
       return;
     } else if (blood === "All") { //select user for location
       donor = await db
@@ -153,13 +162,11 @@ export const getDonorByLocationAndBlood = async (req: Request, res: Response) =>
     console.log(donor);
 
     if (donor.length == 0) {
-      res.json({ message: "No Donors in this location" });
+      res.json({ isSuccess:false, error: "No Donors in this location" });
       return;
     }
 
-    res.status(200).json({
-      donors: donor,
-    });
+    res.status(200).json({ isSuccess:true, donors: donor });
     return;
   } catch (error) {
     res.status(500).json({ error });
