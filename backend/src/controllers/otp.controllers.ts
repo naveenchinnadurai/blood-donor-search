@@ -21,7 +21,7 @@ export const sendOTP = async (req: Request, res: Response) => {
     
     if(donor.length!=0) {
         console.log("something")
-        res.status(200).json({isSuccess:false, message:"Donor already exists!"});
+        res.status(200).json({isSuccess:false, error:"Donor already exists!"});
         return ;
     }
 
@@ -67,7 +67,7 @@ export const verifyOTP = async (req: Request, res: Response) => {
         const storedData = otpStorage[email];
 
         if (!storedData) {
-            res.status(200).json({ isSuccess:false, message: "No OTP found!!" });
+            res.status(200).json({ isSuccess:false, error: "No OTP found!!" });
             return ;
         }
 
@@ -75,12 +75,12 @@ export const verifyOTP = async (req: Request, res: Response) => {
 
         if (Date.now() > expiresAt) {
             delete otpStorage[email];
-            res.status(200).json({ isSuccess:false, message: "OTP has expired" });
+            res.status(200).json({ isSuccess:false, error: "OTP has expired" });
             return ;
         }
 
         if (otp !== storedOtp) {
-            res.status(200).json({ isSuccess:false, message: "Invalid OTP" });
+            res.status(200).json({ isSuccess:false, error: "Invalid OTP" });
             return ;
         }
         

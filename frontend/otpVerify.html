@@ -11,6 +11,10 @@
             backdrop-filter: blur(25px);
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
+        button:disabled {
+            cursor: not-allowed;
+        }
     </style>
 </head>
 
@@ -30,7 +34,7 @@
                     class="p-2 border border-gray-300 rounded-md w-full">
             </div>
             <div class="flex justify-end gap-1">
-                <button type="button" id="sendOTPBtn"
+                <button type="button" id="sendOTPBtn" disabled
                     class="bg-gray-800 text-white py-2 px-4 rounded-lg shadow hover:bg-gray-700 w-fit"
                     onclick="sendOTP()">Send OTP</button>
             </div>
@@ -42,7 +46,7 @@
                         class="p-2 border border-gray-300 rounded-md w-full">
                 </div>
                 <div class="flex justify-end gap-1 mt-3">
-                    <button type="button" id="verifyBtn"
+                    <button type="button" id="verifyBtn" disabled
                         class="bg-gray-800 text-white py-2 px-4 w-fit rounded-lg shadow hover:bg-gray-700"
                         onclick="verifyOTP()">Verify</button>
                 </div>
@@ -51,12 +55,28 @@
     </section>
 
     <script>
-        const name = document.getElementById('name').value;
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const otpInput = document.getElementById('otp');
+        const sendOTPBtn = document.getElementById('sendOTPBtn');
+        const verifyBtn = document.getElementById('verifyBtn');
+        const otpSection = document.getElementById('otpSection');
 
+        const toggleSendOTPButton = () => {
+            sendOTPBtn.disabled = !(nameInput.value.trim() && emailInput.value.trim());
+        };
+
+        const toggleVerifyButton = () => {
+            verifyBtn.disabled = !otpInput.value.trim();
+        };
+
+        nameInput.addEventListener('input', toggleSendOTPButton);
+        emailInput.addEventListener('input', toggleSendOTPButton);
+        otpInput.addEventListener('input', toggleVerifyButton);
 
         const sendOTP = async () => {
-            document.getElementById('sendOTPBtn').textContent = 'Sending...';
-            const email = document.getElementById('email').value;
+            sendOTPBtn.textContent = 'Sending...';
+            const email = emailInput.value;
 
             try {
                 const response = await fetch('http://localhost:7000/api/v1/otp/send', {
@@ -66,33 +86,38 @@
                     },
                     body: JSON.stringify({ email })
                 });
-                console.log(response)
 
                 if (response.ok) {
-                    const responseData = await response.json();
-                    console.log('Response Data:', responseData);
+                    const res = await response.json();
+                    console.log(res)
 
-                    if (responseData.isSuccess) {
-                        alert(responseData.message);
-                        document.getElementById('otpSection').classList.remove('hidden');
-                        document.getElementById('sendOTPBtn').textContent = 'Resend OTP';
+                    if (res.isSuccess) {
+                        Swal.fire({ 
+                            icon:"success",
+                            text: res.message 
+                        });
+                        otpSection.classList.remove('hidden');
+                        sendOTPBtn.textContent = 'Resend OTP';
+                        toggleVerifyButton();
                     } else {
-                        alert(responseData.message);
+                        Swal.fire(res.error);
                     }
                 } else {
-                    alert('Error sending OTP');
+                    Swal.fire('Error sending OTP');
                 }
             } catch (error) {
                 console.error('Error sending OTP:', error);
+            } finally {
+                sendOTPBtn.textContent = 'Send OTP';
             }
-        }
+        };
 
         const verifyOTP = async () => {
-            const otp = document.getElementById('otp').value;
+            const otp = otpInput.value;
+            const name = nameInput.value;
+            const email = emailInput.value;
 
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const data = { name, email }
+            const data = { name, email };
 
             try {
                 const response = await fetch('http://localhost:7000/api/v1/otp/verify', {
@@ -106,16 +131,21 @@
                 const result = await response.json();
 
                 if (result.isSuccess) {
-                    localStorage.setItem('data', JSON.stringify(data))
+                    localStorage.setItem('data', JSON.stringify(data));
                     window.location.href = './register.html';
                 } else {
-                    alert(result.message || 'Invalid OTP');
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: result.message || 'Invalid OTP'
+                    });
                 }
             } catch (error) {
                 console.error('Error verifying OTP:', error);
             }
-        }
+        };
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 </html>
