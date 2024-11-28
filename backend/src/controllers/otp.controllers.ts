@@ -20,8 +20,7 @@ export const sendOTP = async (req: Request, res: Response) => {
     const donor= await db.select().from(donors).where(eq(donors.email,email));
     
     if(donor.length!=0) {
-        console.log("something")
-        res.status(200).json({isSuccess:false, error:"Donor already exists!"});
+        res.status(200).json({isSuccess:false, error:`Donor with ${email} already exists!`});
         return ;
     }
 

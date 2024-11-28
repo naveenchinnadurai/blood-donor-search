@@ -19,3 +19,5 @@ export const validBloodGroups = [
     'O-ve', 
     'AB-ve'
 ];
+
+export const validDonationTypes = [ "All", "Both", "Blood", "Organ"];
