@@ -1,8 +1,9 @@
 import db from "../db_config";
 import { donors } from "../db_config/schema";
 import { Request, Response } from "express";
-import { eq, and } from "drizzle-orm";
-import { validBloodGroups } from "../utils";
+import { eq, and, or } from "drizzle-orm";
+import { validBloodGroups, validDonationTypes } from "../utils";
+import { assert } from "console";
 
 //Health Check controller
 export const checkRoute = async (req: Request, res: Response) => {
@@ -17,13 +18,12 @@ export const registerDonor = async (req: Request, res: Response) => {
 
   console.log({ name, email, mobileNumber, location, bloodGroup });
 
-  const donor= await db.select().from(donors).where(eq(donors.email,email));
-    
-    if(donor.length!=0) {
-        console.log("something")
-        res.status(200).json({isSuccess:false, error:"Donor already exists!"});
-        return ;
-    }
+  const donor = await db.select().from(donors).where(or(eq(donors.email, email), eq(donors.mobileNumber, mobileNumber)));
+
+  if (donor.length != 0) {
+    res.status(201).json({ isSuccess: false, error: "A Donor already exists with the same Email or Phone Number!" });
+    return;
+  }
 
   try {
     const newDonor = await db
@@ -40,7 +40,7 @@ export const registerDonor = async (req: Request, res: Response) => {
       .returning();
 
     console.log(newDonor);
-    res.status(200).json({ donor: newDonor[0], isSuccess: true, message:"Donor joined, Successfully!!" });
+    res.status(201).json({ donor: newDonor[0], isSuccess: true, message: "Donor joined, Successfully!!" });
     return;
   } catch (error) {
     res.status(500).json({ error });
@@ -76,7 +76,7 @@ export const getDonorByLocation = async (req: Request, res: Response) => {
     }
 
     if (donorsByLocation.length == 0) {
-      res.json({ message: "No Donors in this location" });
+      res.status(200).json({ message: "No Donors in this location" });
       return;
     }
 
@@ -94,7 +94,8 @@ export const getDonorByBlood = async (req: Request, res: Response) => {
   const { blood } = req.params;
 
   if (!validBloodGroups.includes(blood)) {
-    res.json({
+    res.status(200).json({
+      isSuccess: false,
       message: "Invalid Blood Group"
     })
     return;
@@ -109,11 +110,12 @@ export const getDonorByBlood = async (req: Request, res: Response) => {
     console.log(donorsByBlood);
 
     if (donorsByBlood.length == 0) {
-      res.json({ message: "No Donors with this Blood Group" });
+      res.status(200).json({ isSuccess: false, message: "No Donors with this Blood Group" });
       return;
     }
 
     res.status(200).json({
+      isSuccess: true,
       donors: donorsByBlood,
     });
     return;
@@ -122,53 +124,98 @@ export const getDonorByBlood = async (req: Request, res: Response) => {
   }
 };
 
+export const getDonorByLocationBloodAndType = async (req: Request, res: Response) => {
+  const { location, blood, donationType } = req.params;
 
-// Get users with Location and blood group
-export const getDonorByLocationAndBlood = async (req: Request, res: Response) => {
-  const { location, blood } = req.params;
+  console.log({ location, blood, donationType });
 
-  console.log({ location, blood })
-
+  // Validate input parameters
   if (!validBloodGroups.includes(blood)) {
     res.json({
-      message: "Invalid Blood Group"
-    })
+      isSuccess: false,
+      message: "Invalid Blood Group",
+    });
+    return;
+  }
+
+  if (!validDonationTypes.includes(donationType)) {
+    res.json({
+      isSuccess: false,
+      message: "Invalid Donation Type",
+    });
     return;
   }
 
   try {
-    let donor;
-    if (blood === "All" && location === "All") {
-      const alldonors = await db.select().from(donors);
-      res.status(200).json({ isSuccess:true, donors: alldonors });
-      return;
-    } else if (blood === "All") { //select user for location
-      donor = await db
+    let donorsList;
+
+    // Handle "All" cases
+    if (blood === "All" && location === "All" && donationType === "All") {
+      donorsList = await db.select().from(donors);
+    } else if (blood === "All" && location === "All") {
+      donorsList = await db
+        .select()
+        .from(donors)
+        .where(eq(donors.donationType, donationType as "Both" | "Blood" | "Organ"));
+    } else if (blood === "All" && donationType === "All") {
+      donorsList = await db
         .select()
         .from(donors)
         .where(eq(donors.location, location));
-    } else if (location === "All") {  //select user for blood
-      donor = await db
+    } else if (location === "All" && donationType === "All") {
+      donorsList = await db
         .select()
         .from(donors)
         .where(eq(donors.bloodGroup, blood as "A+ve" | "B+ve" | "O+ve" | "AB+ve" | "A-ve" | "B-ve" | "O-ve" | "AB-ve"));
-    } else {  //select user for location and blood
-      donor = await db
+    } else if (blood === "All") {
+      donorsList = await db
         .select()
         .from(donors)
-        .where(and(eq(donors.location, location), eq(donors.bloodGroup, blood as "A+ve" | "B+ve" | "O+ve" | "AB+ve" | "A-ve" | "B-ve" | "O-ve" | "AB-ve")));
+        .where(and(
+          eq(donors.location, location),
+          eq(donors.donationType, donationType as "Both" | "Blood" | "Organ")
+        ));
+    } else if (location === "All") {
+      donorsList = await db
+        .select()
+        .from(donors)
+        .where(and(
+          eq(donors.bloodGroup, blood as "A+ve" | "B+ve" | "O+ve" | "AB+ve" | "A-ve" | "B-ve" | "O-ve" | "AB-ve"),
+          eq(donors.donationType, donationType as "Both" | "Blood" | "Organ")
+        ));
+    } else if (donationType === "All") {
+      donorsList = await db
+        .select()
+        .from(donors)
+        .where(and(
+          eq(donors.location, location),
+          eq(donors.bloodGroup, blood as "A+ve" | "B+ve" | "O+ve" | "AB+ve" | "A-ve" | "B-ve" | "O-ve" | "AB-ve")
+        ));
+    } else {
+      // Filter by all three parameters
+      donorsList = await db
+        .select()
+        .from(donors)
+        .where(and(
+          eq(donors.location, location),
+          eq(donors.bloodGroup, blood as "A+ve" | "B+ve" | "O+ve" | "AB+ve" | "A-ve" | "B-ve" | "O-ve" | "AB-ve"),
+          eq(donors.donationType, donationType as "Both" | "Blood" | "Organ")
+        ));
     }
 
-    console.log(donor);
+    console.log(donorsList);
 
-    if (donor.length == 0) {
-      res.json({ isSuccess:false, error: "No Donors in this location" });
+    if (!donorsList || donorsList.length === 0) {
+      res.status(200).json({
+        isSuccess: false,
+        error: "No Donors found for the given filters",
+      });
       return;
     }
 
-    res.status(200).json({ isSuccess:true, donors: donor });
-    return;
+    res.status(200).json({ isSuccess: true, donors: donorsList });
   } catch (error) {
-    res.status(500).json({ error });
+    console.error("Error fetching donors:", error);
+    res.status(500).json({ isSuccess: false, error });
   }
 };

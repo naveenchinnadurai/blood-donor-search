@@ -1,4 +1,4 @@
-import { checkRoute, registerDonor, getdonors, getDonorByLocation, getDonorByLocationAndBlood, getDonorByBlood } from "../controllers/donors.controllers";
+import { checkRoute, registerDonor, getdonors, getDonorByLocation, getDonorByLocationBloodAndType, getDonorByBlood } from "../controllers/donors.controllers";
 import express from "express";
 
 const router = express.Router();
@@ -11,7 +11,7 @@ router.get("/location/:location", getDonorByLocation);
 
 router.get("/blood/:blood", getDonorByBlood);
 
-router.get("/:location/:blood", getDonorByLocationAndBlood);
+router.get("/:location/:blood/:donationType", getDonorByLocationBloodAndType);
 
 router.post("/", registerDonor);
 
