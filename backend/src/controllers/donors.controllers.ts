@@ -50,47 +50,59 @@ export const registerDonor = async (req: Request, res: Response) => {
 // Update the User by ID
 
 export const updateDonor = async (req: Request, res: Response) => {
-  const { donorEmail } = req.params;
-  const { name, email, mobileNumber, location, bloodGroup, donationType } = req.body;
-
+  const { email } = req.params;
+  const { name, newEmail , mobileNumber, location, bloodGroup, donationType } = req.body;
+  console.log(email)
+  console.log({ name, newEmail , mobileNumber, location, bloodGroup, donationType })
   try {
-    const existingDonor = await db.select().from(donors).where(eq(donors.email, donorEmail));
+    const existingDonor = await db.select().from(donors).where(eq(donors.email, email));
 
     if (existingDonor.length === 0) {
-      res.status(404).json({ isSuccess: false, error: "Donor not found" });
+      res.status(200).json({ isSuccess: false, error: "Donor not found with the email" });
       return;
     }
-    if (email || mobileNumber) {
+    if (newEmail) {
+      console.log("email")
       const conflictingDonor = await db
         .select()
         .from(donors)
-        .where(
-          or(
-            eq(donors.email, email ?? existingDonor[0].email),
-            eq(donors.mobileNumber, mobileNumber ?? existingDonor[0].mobileNumber)
-          )
-        )
-        .whereNot(eq(donors.email, donorEmail));
+        .where( eq(donors.email, newEmail ) )
 
       if (conflictingDonor.length > 0) {
-        res.status(409).json({ isSuccess: false, error: "Email or Mobile Number already in use" });
+        res.status(200).json({ isSuccess: false, error: "Email already in use" });
         return;
       }
     }
+    
+    if(mobileNumber){
+      console.log("mobile")
+
+      const conflictingDonor = await db
+        .select()
+        .from(donors)
+        .where( eq(donors.mobileNumber, mobileNumber ) )
+
+      if (conflictingDonor.length > 0) {
+        res.status(200).json({ isSuccess: false, error: "Mobile Number already in use" });
+        return;
+      }
+    }
+
     const updatedDonor = await db
       .update(donors)
       .set({
         name: name ?? existingDonor[0].name,
-        email: email ?? existingDonor[0].email,
+        email: newEmail ?? existingDonor[0].email,
         mobileNumber: mobileNumber ?? existingDonor[0].mobileNumber,
         location: location ?? existingDonor[0].location,
         bloodGroup: bloodGroup ?? existingDonor[0].bloodGroup,
         donationType: donationType ?? existingDonor[0].donationType,
       })
-      .where(eq(donors.email, donorEmail));
+      .where(eq(donors.email, email));
 
     res.status(200).json({
-      status: true,
+      isSuccess: true,
+      message:"Donors informations updated successfully!"
     });
   } catch (error) {
     console.error("Error updating donor:", error);

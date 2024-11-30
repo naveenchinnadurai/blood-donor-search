@@ -2,86 +2,79 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Edit Donor Details</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body {
-            background: url('./assets/background.jpg') no-repeat center center fixed;
-            background-size: cover;
-        }
 
         .glassmorphism {
             backdrop-filter: blur(18px);
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
     </style>
-    <script>
-        function toggleForms(step) {
-            document.getElementById('email-verification-form').classList.toggle('hidden', step !== 1);
-            document.getElementById('edit-details-form').classList.toggle('hidden', step !== 2);
-        }
-    </script>
 </head>
 
-<body class="min-h-screen flex items-center justify-center px-3">
+<body class="min-h-screen flex items-center justify-center px-3 bg-center bg-cover" style="background-image: url('../assets/background.jpg');">
     <div class="glassmorphism max-w-lg w-full p-6">
         <div class="flex justify-center relative">
-            <a href="index.html" class="absolute left-0 flex justify-start mb-5 items-center col-span-2 md:col-span-1">
+            <a href="../index.html" class="absolute left-0 flex justify-start mb-5 items-center col-span-2 md:col-span-1">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     class="lucide lucide-chevron-left">
                     <path d="m15 18-6-6 6-6" />
                 </svg>
-                <p class="text-xl font-medium">Back</p>
             </a>
             <h2 class="text-2xl font-bold text-center">Edit Donor Details</h2>
         </div>
         <!-- Email Verification Form -->
-        <form id="email-verification-form" class="hidden space-y-6">
-            <div>
-                <label for="email" class="block font-bold text-gray-700">Enter Your Email:</label>
+        <form id="otpForm" class="space-y-6 mt-3">
+            <div class="flex flex-col gap-2">
+                <label for="email" class="block font-bold text-gray-700">Email:</label>
                 <input type="email" id="email" name="email" required
                     class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter your registered email">
-            </div>
-            <div>
-                <button type="button" id="send-otp-btn"
-                    class="bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-500 w-full transition-all duration-300">
+                    placeholder="Enter your registered email" />
+                <button type="button" id="send-otp" onclick="sendOTP()"
+                    class="bg-gray-800 text-white py-2 px-4 rounded-md hover:bg-gray-500 w-fit self-end mt-4 transition-all duration-300">
                     Send OTP
                 </button>
             </div>
-            <div class="hidden" id="otp-section">
+            <div class="hidden flex flex-col gap-2" id="otp-section">
                 <label for="otp" class="block font-bold text-gray-700">Enter OTP:</label>
                 <input type="text" id="otp" name="otp" required
                     class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-green-500"
-                    placeholder="Enter the OTP sent to your email">
+                    placeholder="Enter the OTP sent to your email" />
                 <button type="button" id="verify-otp-btn"
-                    class="bg-green-600 text-white py-3 px-6 rounded-md hover:bg-green-500 w-full mt-4 transition-all duration-300"
-                    onclick="toggleForms(2)">
+                    class="bg-gray-800 text-white py-2 px-4 mt-2 rounded-md hover:bg-gray-500 w-fit self-end transition-all duration-300"
+                    onclick="verifyOTP()">
                     Verify OTP
                 </button>
             </div>
         </form>
 
         <!-- Edit Details Form -->
-        <form id="edit-details-form" class=" space-y-6">
+        <div id="edit-details-form" class="hidden space-y-6">
             <div>
                 <label for="name" class="block font-bold text-gray-700">Name:</label>
                 <input type="text" id="name" name="name" required
                     class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter your name">
+                    placeholder="Enter your name" />
+            </div>
+            <div>
+                <label for="new-email" class="block font-bold text-gray-700">New Email:</label>
+                <input type="email" id="new-email" name="newEmail" required
+                    class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter your Email" />
             </div>
             <div class="flex justify-center w-full space-x-2">
                 <div class="w-1/2">
                     <label for="mobile" class="block font-bold text-gray-700">Mobile Number:</label>
                     <input type="text" id="mobile" name="mobile" required
                         class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter your mobile number">
+                        placeholder="Enter your mobile number" />
                 </div>
                 <div class="w-1/2">
-                    <label for="location" class="block font-bold text-gray-700">Location:</label>
+                    <label for="district" class="block font-bold text-gray-700">Location:</label>
                     <select id="district" required name="district" class="p-2 border border-gray-300 rounded-md w-full">
                         <option value="All">All</option>
                         <option value="Ariyalur">Ariyalur</option>
@@ -150,14 +143,14 @@
                     </select>
                 </div>
             </div>
-            <div>
-                <button type="submit"
-                    class="bg-gray-800 text-white py-3 inline w-full px-6 rounded-md hover:bg-gray-700">
-                    Update Details
-                </button>
-            </div>
-        </form>
+            <button onclick="updateData()"
+                class="bg-gray-800 text-white py-3 inline w-full px-6 rounded-md hover:bg-gray-700">
+                Update Details
+            </button>
+        </div>
     </div>
+    <script src="../scripts//update.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 </html>
