@@ -1,9 +1,11 @@
-import { checkRoute, registerDonor, getdonors, getDonorByLocation, getDonorByLocationBloodAndType, getDonorByBlood } from "../controllers/donors.controllers";
+import { checkRoute, registerDonor, updateDonor, getdonors, getDonorByLocation, getDonorByLocationBloodAndType, getDonorByBlood } from "../controllers/donors.controllers";
 import express from "express";
 
 const router = express.Router();
 
 router.get("/", getdonors);
+
+router.put("/:email",updateDonor)
 
 router.get("/health-check", checkRoute);
 
