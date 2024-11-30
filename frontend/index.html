@@ -4,33 +4,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Blood Donation</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
-<body class="flex flex-col items-center justify-center gap-5 bg-cover bg-center text-gray-900 font-sans h-screen w-full"
-    style="background-image: url('./assets/background.jpg');"> 
-        <div class="flex flex-col sm:flex-row space-y-6 sm:space-x-6">
-            <!-- Join as a Donor Button -->
-            <a href="otp-verification.html"
-                class="bg-gray-400 bg-opacity-40 backdrop-blur-md rounded-lg py-6 px-16 shadow-lg flex flex-col items-center justify-center hover:shadow-xl transition-shadow duration-300">
-                <div class="p-4">
-                    <img src="./assets/JoinDonor-Icon.png" alt="Donor Icon" class="w-32">
-                </div>
-                <p class="text-gray-900 font-semibold text-lg">Join as a Donor</p>
-            </a>
-    
-            <!-- Search a Donor Button -->
-            <a href="search-donor.html"
-                class="bg-gray-400 bg-opacity-40 backdrop-blur-md rounded-lg py-6 px-16 shadow-lg flex flex-col items-center justify-center hover:shadow-xl transition-shadow duration-300">
-                <div class="p-4">
-                    <img src="./assets/searchDonor.png" alt="Search Donor Icon" class="w-32">
-                </div>
-                <p class="text-gray-900 font-semibold text-lg">Search a Donor</p>
-            </a>
-        </div>
+<body class="bg-cover bg-center h-screen flex justify-center items-center p-10 w-full"
+    style="background-image: url('./assets/background.jpg');">
+    <div class="flex flex-col justify-center w-full h-fit sm:flex-row space-y-6 sm:space-x-6 sm:space-y-0">
+        <!-- Join as a Donor Button -->
+        <a href="pages/otp-verification.html"
+            class="bg-gray-400 bg-opacity-40 backdrop-blur-md rounded-lg py-6 sm:px-16 shadow-lg flex flex-col items-center justify-center hover:shadow-xl transition-shadow duration-300">
+            <div class="p-4">
+                <img src="./assets/JoinDonor-Icon.png" alt="Donor Icon" class="w-32">
+            </div>
+            <p class="text-gray-900 font-semibold text-lg">Join as a Donor</p>
+        </a>
 
-        <a href="./edit.html" class="absolute bottom-5 sm:bottom-20 my-3 mx-auto w-fit text-lg text-white ">Update Donors details here ..</a>
+        <!-- Search a Donor Button -->
+        <a href="pages/search-donor.html"
+            class="bg-gray-400 bg-opacity-40 backdrop-blur-md rounded-lg py-6 sm:px-16 shadow-lg flex flex-col items-center justify-center hover:shadow-xl transition-shadow duration-300">
+            <div class="p-4">
+                <img src="./assets/searchDonor.png" alt="Search Donor Icon" class="w-32">
+            </div>
+            <p class="text-gray-900 font-semibold text-lg">Search a Donor</p>
+        </a>
+    </div>
+
+    <a href="./pages/update-donor-info.html"
+        class="absolute top-2 right-0 sm:top-5 sm:right-5 flex gap-2 px-6 py-2 rounded-3xl w-fit text-lg text-white ">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="lucide lucide-user-pen">
+            <path d="M11.5 15H7a4 4 0 0 0-4 4v2" />
+            <path
+                d="M21.378 16.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" />
+            <circle cx="10" cy="7" r="4" />
+        </svg>
+        Edit Donors Info
+    </a>
 </body>
 
 </html>
