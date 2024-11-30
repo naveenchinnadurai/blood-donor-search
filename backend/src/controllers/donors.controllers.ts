@@ -47,6 +47,57 @@ export const registerDonor = async (req: Request, res: Response) => {
   }
 };
 
+// Update the User by ID
+
+export const updateDonor = async (req: Request, res: Response) => {
+  const { donorEmail } = req.params;
+  const { name, email, mobileNumber, location, bloodGroup, donationType } = req.body;
+
+  try {
+    const existingDonor = await db.select().from(donors).where(eq(donors.email, donorEmail));
+
+    if (existingDonor.length === 0) {
+      res.status(404).json({ isSuccess: false, error: "Donor not found" });
+      return;
+    }
+    if (email || mobileNumber) {
+      const conflictingDonor = await db
+        .select()
+        .from(donors)
+        .where(
+          or(
+            eq(donors.email, email ?? existingDonor[0].email),
+            eq(donors.mobileNumber, mobileNumber ?? existingDonor[0].mobileNumber)
+          )
+        )
+        .whereNot(eq(donors.email, donorEmail));
+
+      if (conflictingDonor.length > 0) {
+        res.status(409).json({ isSuccess: false, error: "Email or Mobile Number already in use" });
+        return;
+      }
+    }
+    const updatedDonor = await db
+      .update(donors)
+      .set({
+        name: name ?? existingDonor[0].name,
+        email: email ?? existingDonor[0].email,
+        mobileNumber: mobileNumber ?? existingDonor[0].mobileNumber,
+        location: location ?? existingDonor[0].location,
+        bloodGroup: bloodGroup ?? existingDonor[0].bloodGroup,
+        donationType: donationType ?? existingDonor[0].donationType,
+      })
+      .where(eq(donors.email, donorEmail));
+
+    res.status(200).json({
+      status: true,
+    });
+  } catch (error) {
+    console.error("Error updating donor:", error);
+    res.status(500).json({ isSuccess: false, error: "Failed to update donor" });
+  }
+};
+
 // Get all donors
 export const getdonors = async (req: Request, res: Response) => {
   try {
