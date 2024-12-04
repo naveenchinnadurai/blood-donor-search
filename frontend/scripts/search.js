@@ -23,26 +23,45 @@ document.getElementById("search-btn").addEventListener("click", function () {
         const donorCardsContainer = document.getElementById('donor-cards');
         donorCardsContainer.innerHTML = null;
 
-        if(!donors || donors.length===0){
-            donorCardsContainer.innerHTML=`
+        if (!donors || donors.length === 0) {
+            donorCardsContainer.innerHTML = `
             <div class="w-full flex justify-center col-span-2 my-6">
                 <p>No Donors Found...!</p>    
             </div>
             `
-            return ;
+            return;
         }
 
         donors.forEach(donor => {
             const donorCard = `
-            <div class="bg-gray-400 bg-opacity-50 p-4 pt-3 rounded-lg shadow-lg">
-                <div class="flex justify-between items-center">
-                    <h3 class="text-lg font-medium mb-2">${donor.name}</h3>
-                    <p class="text-lg text-gray-800 font-medium">(Donation Type: ${donor.donationType})</p>
-                </div>
-                <p class="text-slate-800 text-md font-medium">Blood Group: <span class="font-semibold text-gray-800">${donor.bloodGroup}</span></p>
-                <p class="text-slate-800 text-md font-medium">District: <span class="font-semibold text-gray-800">${donor.location}</span></p>
-                <p class="text-slate-800 text-md font-medium">Mobile No.: <span class="font-semibold text-gray-800">${donor.mobileNumber}</span></p>
-            </div> `;
+                <div class="bg-gray-400 bg-opacity-50 p-4 pt-3 rounded-lg shadow-lg">
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+                        <h3 class="text-lg font-medium sm:mb-2">${donor.name}</h3>
+                        <p class="text-lg text-gray-800 font-medium mb-2 sm:mb-0">(Donation Type: ${donor.donationType})</p>
+                    </div>
+                    <p class="text-slate-800 text-md font-medium">Blood Group: 
+                        <span class="font-semibold text-gray-800">${donor.bloodGroup}</span>
+                    </p>
+                    <p class="text-slate-800 text-md font-medium">District: 
+                        <span class="font-semibold text-gray-800">${donor.location}</span>
+                    </p>
+                    <p class="text-slate-800 text-md font-medium">Mobile No.: 
+                        <span class="font-semibold text-gray-800">${donor.mobileNumber}</span>
+                    </p>
+                    <div class="flex gap-2">
+                        <p class="text-slate-800 text-md font-medium">Organs:</p>
+                        ${
+                            donor.donationType !== "Blood" ? (
+                                ` <ul class="text-slate-800 text-md font-medium flex gap-2 ">
+                                        ${
+                                            donor.organs.map(organ => `<li class="font-semibold text-gray-800">${organ}</li>`).join(',')
+                                        }  
+                                    </ul> `
+                            ):`<p class="font-semibold text-gray-800">Not interseted</p>`
+                        }
+                    </div>
+                </div>`
+
             donorCardsContainer.innerHTML += donorCard;
         });
     }

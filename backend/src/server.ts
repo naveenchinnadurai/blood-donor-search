@@ -2,8 +2,8 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from 'cors'; 
 import { Request, Response } from "express";
-import donorsRoutes from './routers/donors.routes';
-import otpRoutes from './routers/otp.routes';
+import donorsRoutes from './routes/donors.routes';
+import otpRoutes from './routes/otp.routes';
 
 dotenv.config();
 

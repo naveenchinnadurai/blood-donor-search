@@ -1,0 +1,7 @@
+
+
+PORT=
+
+GOOGLE_PASS=
+
+DB_URL= postgres://postgres:<PASSWORD>@localhost:5432/<DB_Name>
