@@ -3,7 +3,6 @@ import { donors } from "../db_config/schema";
 import { Request, Response } from "express";
 import { eq, and, or } from "drizzle-orm";
 import { validBloodGroups, validDonationTypes } from "../utils";
-import { assert } from "console";
 
 //Health Check controller
 export const checkRoute = async (req: Request, res: Response) => {
@@ -14,9 +13,9 @@ export const checkRoute = async (req: Request, res: Response) => {
 
 // Create a new user
 export const registerDonor = async (req: Request, res: Response) => {
-  const { name, email, mobileNumber, location, bloodGroup, donationType } = req.body;
+  const { name, email, mobileNumber, location, bloodGroup, donationType, organs } = req.body;
 
-  console.log({ name, email, mobileNumber, location, bloodGroup });
+  console.log({ name, email, mobileNumber, location, bloodGroup,organs });
 
   const donor = await db.select().from(donors).where(or(eq(donors.email, email), eq(donors.mobileNumber, mobileNumber)));
 
@@ -35,7 +34,8 @@ export const registerDonor = async (req: Request, res: Response) => {
         location,
         joinedAt: new Date(),
         bloodGroup,
-        donationType
+        donationType,
+        organs
       })
       .returning();
 
@@ -122,70 +122,6 @@ export const getdonors = async (req: Request, res: Response) => {
   }
 };
 
-// Get users by Location
-export const getDonorByLocation = async (req: Request, res: Response) => {
-  const { location } = req.params;
-  try {
-    let donorsByLocation;
-    if (location === "All") {
-      donorsByLocation = await db
-        .select()
-        .from(donors);
-    } else {
-      donorsByLocation = await db
-        .select()
-        .from(donors)
-        .where(eq(donors.location, location.toLowerCase()));
-    }
-
-    if (donorsByLocation.length == 0) {
-      res.status(200).json({ message: "No Donors in this location" });
-      return;
-    }
-
-    res.status(200).json({
-      donors: donorsByLocation,
-    });
-    return;
-  } catch (error) {
-    res.status(500).json({ error });
-  }
-};
-
-// Get users by blood
-export const getDonorByBlood = async (req: Request, res: Response) => {
-  const { blood } = req.params;
-
-  if (!validBloodGroups.includes(blood)) {
-    res.status(200).json({
-      isSuccess: false,
-      message: "Invalid Blood Group"
-    })
-    return;
-  }
-
-  try {
-    const donorsByBlood = await db
-      .select()
-      .from(donors)
-      .where(eq(donors.bloodGroup, blood as "A+ve" | "B+ve" | "O+ve" | "AB+ve" | "A-ve" | "B-ve" | "O-ve" | "AB-ve"));
-
-    console.log(donorsByBlood);
-
-    if (donorsByBlood.length == 0) {
-      res.status(200).json({ isSuccess: false, message: "No Donors with this Blood Group" });
-      return;
-    }
-
-    res.status(200).json({
-      isSuccess: true,
-      donors: donorsByBlood,
-    });
-    return;
-  } catch (error) {
-    res.status(500).json({ error });
-  }
-};
 
 export const getDonorByLocationBloodAndType = async (req: Request, res: Response) => {
   const { location, blood, donationType } = req.params;
