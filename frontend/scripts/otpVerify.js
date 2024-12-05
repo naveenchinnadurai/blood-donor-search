@@ -1,47 +1,59 @@
 const nameInput = document.getElementById('name');
 const emailInput = document.getElementById('email');
 const otpInput = document.getElementById('otp');
-const sendOTPBtn = document.getElementById('sendOTPBtn');
-const verifyBtn = document.getElementById('verifyBtn');
-const otpSection = document.getElementById('otpSection');
+const sendOTPBtn = document.getElementById('send-otp-btn');
+const verifyBtn = document.getElementById('verify-otp-btn');
+const otpSection = document.getElementById('otp-section');
+const otpForm = document.getElementById('otp-form');
+const inputForm = document.getElementById('input-form');
 
-const toggleSendOTPButton = () => {
-    sendOTPBtn.disabled = !(nameInput.value.trim() && emailInput.value.trim());
-};
+const sendOTP = async (isNewDonor) => {
 
-const toggleVerifyButton = () => {
-    verifyBtn.disabled = !otpInput.value.trim();
-};
+    if (isNewDonor) {
+        const emailValue = emailInput.value.trim();
+        const nameValue = nameInput.value.trim();
 
-nameInput.addEventListener('input', toggleSendOTPButton);
-emailInput.addEventListener('input', toggleSendOTPButton);
-otpInput.addEventListener('input', toggleVerifyButton);
-
-const sendOTP = async () => {
+        if(!emailValue || !nameValue) {
+            Swal.fire({
+                icon: "error",
+                title:"Required",
+                text: "Email and Name cannot be empty!!"
+            });
+            return ;
+        }
+    }else{
+        const emailValue = emailInput.value.trim();
+        if(!emailValue) {
+            Swal.fire({
+                icon: "error",
+                title:"Required",
+                text: "Email cannot be empty!!"
+            });
+            return ;
+        }
+    }
     sendOTPBtn.textContent = 'Sending...';
     const email = emailInput.value;
-
     try {
-        const response = await fetch('http://localhost:7000/api/v1/otp/send', {
+        const response = await fetch('https://finer-albacore-amazed.ngrok-free.app/api/v1/otp/send', {
             method: 'POST',
             headers: {
+                'ngrok-skip-browser-warning': 'true',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ email })
+            body: JSON.stringify({ email, isNewDonor: isNewDonor })
         });
 
         if (response.ok) {
             const res = await response.json();
             console.log(res)
 
-            if (res.isSuccess) {
+            if (res.status) {
                 Swal.fire({
                     icon: "success",
                     text: res.message
                 });
                 otpSection.classList.remove('hidden');
-                sendOTPBtn.textContent = 'Resend OTP';
-                toggleVerifyButton();
             } else {
                 Swal.fire(res.error);
             }
@@ -55,17 +67,36 @@ const sendOTP = async () => {
     }
 };
 
-const verifyOTP = async () => {
+const verifyOTP = async (isNewDonor) => {
+
+    verifyBtn.textContent = "verifing OTP"
     const otp = otpInput.value;
-    const name = nameInput.value;
+
+    if(!otp.trim()){
+        Swal.fire({
+            icon: "error",
+            title: "Required",
+            text: "OTP cannot be empty"
+        });
+        return ;
+    }
+
     const email = emailInput.value;
 
-    const data = { name, email };
+    let data;
+
+    if (isNewDonor) {
+        const name = nameInput.value;
+        data = { name, email };
+    } else {
+        data = { email }
+    }
 
     try {
-        const response = await fetch('http://localhost:7000/api/v1/otp/verify', {
+        const response = await fetch('https://finer-albacore-amazed.ngrok-free.app/api/v1/otp/verify', {
             method: 'POST',
             headers: {
+                'ngrok-skip-browser-warning': 'true',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ email, otp })
@@ -73,9 +104,16 @@ const verifyOTP = async () => {
 
         const result = await response.json();
 
-        if (result.isSuccess) {
-            localStorage.setItem('data', JSON.stringify(data));
-            window.location.href = '../pages/register.html';
+        if (result.status) {
+            Swal.fire({
+                icon: "success",
+                text: result.message
+            }).then(() => {
+                otpForm.classList.add('hidden');
+                inputForm.classList.remove('hidden');
+                localStorage.setItem('data', JSON.stringify(data));
+            });
+
         } else {
             Swal.fire({
                 icon: "error",
@@ -85,5 +123,9 @@ const verifyOTP = async () => {
         }
     } catch (error) {
         console.error('Error verifying OTP:', error);
+        Swal.fire({
+            icon: "error",
+            text: "Error Verifying OTP, try again"
+        })
     }
 };

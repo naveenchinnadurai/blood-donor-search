@@ -1,4 +1,4 @@
-document.getElementById('donation-form').addEventListener('submit', function (e) {
+document.getElementById('input-form').addEventListener('submit', function (e) {
     e.preventDefault();
 
     const data = JSON.parse(localStorage.getItem('data'));
@@ -21,9 +21,10 @@ document.getElementById('donation-form').addEventListener('submit', function (e)
 
 async function createDonor(data) {
     try {
-        const response = await fetch(`http://localhost:7000/api/v1/donors/`, {
+        const response = await fetch(`https://finer-albacore-amazed.ngrok-free.app/api/v1/donors/`, {
             method: 'POST',
             headers: {
+                'ngrok-skip-browser-warning': 'true',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
@@ -31,7 +32,7 @@ async function createDonor(data) {
         const res = await response.json()
         console.log(res)
 
-        if (response.ok && res.isSuccess) {
+        if (response.ok && res.status) {
             Swal.fire({
                 icon: "success",
                 text: "Joined",
