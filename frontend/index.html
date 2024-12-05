@@ -4,18 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blood Donation</title>
+    <title>Blood and Organ Donation</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
-<body class="bg-cover bg-center h-screen flex justify-center items-center p-10 w-full"
+<body class="bg-cover bg-center overflow-hidden h-screen flex justify-center items-center p-10 w-full"
     style="background-image: url('./assets/background.jpg');">
+    <div class="absolute top-2 py-2 left-1 cursor-pointer">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="lucide lucide-shield-check text-gray-600">
+            <path
+                d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+            <path d="m9 12 2 2 4-4" />
+        </svg>
+    </div>
     <div class="flex flex-col justify-center w-full h-fit sm:flex-row space-y-6 sm:space-x-6 sm:space-y-0">
         <!-- Join as a Donor Button -->
-        <a href="pages/otp-verification.html"
+        <a href="pages/register.html"
             class="bg-gray-400 bg-opacity-40 backdrop-blur-md rounded-lg py-6 sm:px-16 shadow-lg flex flex-col items-center justify-center hover:shadow-xl transition-shadow duration-300">
             <div class="p-4">
-                <img src="./assets/JoinDonor-Icon.png" alt="Donor Icon" class="w-32">
+                <img src="./assets/join.png" alt="Donor Icon" class="w-32">
             </div>
             <p class="text-gray-900 font-semibold text-lg">Join as a Donor</p>
         </a>
@@ -24,15 +33,15 @@
         <a href="pages/search-donor.html"
             class="bg-gray-400 bg-opacity-40 backdrop-blur-md rounded-lg py-6 sm:px-16 shadow-lg flex flex-col items-center justify-center hover:shadow-xl transition-shadow duration-300">
             <div class="p-4">
-                <img src="./assets/searchDonor.png" alt="Search Donor Icon" class="w-32">
+                <img src="./assets/search.png" alt="Search Donor Icon" class="w-32">
             </div>
             <p class="text-gray-900 font-semibold text-lg">Search a Donor</p>
         </a>
     </div>
 
     <a href="./pages/update-donor-info.html"
-        class="absolute top-2 right-0 sm:top-5 sm:right-5 flex gap-2 px-6 py-2 rounded-3xl w-fit text-lg text-white ">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+        class="absolute top-2 right-3 sm:top-5 border border-1 sm:right-5 flex gap-2 px-6 py-2 rounded-full w-fit text-sm text-white ">
+        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
             class="lucide lucide-user-pen">
             <path d="M11.5 15H7a4 4 0 0 0-4 4v2" />

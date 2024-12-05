@@ -15,12 +15,10 @@ export const checkRoute = async (req: Request, res: Response) => {
 export const registerDonor = async (req: Request, res: Response) => {
   const { name, email, mobileNumber, location, bloodGroup, donationType, organs } = req.body;
 
-  console.log({ name, email, mobileNumber, location, bloodGroup,organs });
-
   const donor = await db.select().from(donors).where(or(eq(donors.email, email), eq(donors.mobileNumber, mobileNumber)));
 
   if (donor.length != 0) {
-    res.status(201).json({ isSuccess: false, error: "A Donor already exists with the same Email or Phone Number!" });
+    res.status(201).json({ status: false, error: "A Donor already exists with the same Email or Phone Number!" });
     return;
   }
 
@@ -32,58 +30,52 @@ export const registerDonor = async (req: Request, res: Response) => {
         email,
         mobileNumber,
         location,
-        joinedAt: new Date(),
         bloodGroup,
         donationType,
         organs
       })
       .returning();
 
-    console.log(newDonor);
-    res.status(201).json({ donor: newDonor[0], isSuccess: true, message: "Donor joined, Successfully!!" });
+    res.status(201).json({ donor: newDonor[0], status: true, message: "Donor joined, Successfully!!" });
     return;
   } catch (error) {
     res.status(500).json({ error });
   }
 };
 
-// Update the User by ID
-
+// Update the User by emailde
 export const updateDonor = async (req: Request, res: Response) => {
   const { email } = req.params;
-  const { name, newEmail , mobileNumber, location, bloodGroup, donationType } = req.body;
-  console.log(email)
-  console.log({ name, newEmail , mobileNumber, location, bloodGroup, donationType })
+  const { name, newEmail, mobileNumber, location, bloodGroup, donationType, organs } = req.body;
+
   try {
     const existingDonor = await db.select().from(donors).where(eq(donors.email, email));
 
     if (existingDonor.length === 0) {
-      res.status(200).json({ isSuccess: false, error: "Donor not found with the email" });
+      res.status(200).json({ status: false, error: "Donor not found with the email" });
       return;
     }
     if (newEmail) {
-      console.log("email")
       const conflictingDonor = await db
         .select()
         .from(donors)
-        .where( eq(donors.email, newEmail ) )
+        .where(eq(donors.email, newEmail))
 
       if (conflictingDonor.length > 0) {
-        res.status(200).json({ isSuccess: false, error: "Email already in use" });
+        res.status(200).json({ status: false, error: "Email already in use" });
         return;
       }
     }
-    
-    if(mobileNumber){
-      console.log("mobile")
+
+    if (mobileNumber) {
 
       const conflictingDonor = await db
         .select()
         .from(donors)
-        .where( eq(donors.mobileNumber, mobileNumber ) )
+        .where(eq(donors.mobileNumber, mobileNumber))
 
       if (conflictingDonor.length > 0) {
-        res.status(200).json({ isSuccess: false, error: "Mobile Number already in use" });
+        res.status(200).json({ status: false, error: "Mobile Number already in use" });
         return;
       }
     }
@@ -97,16 +89,17 @@ export const updateDonor = async (req: Request, res: Response) => {
         location: location ?? existingDonor[0].location,
         bloodGroup: bloodGroup ?? existingDonor[0].bloodGroup,
         donationType: donationType ?? existingDonor[0].donationType,
+        organs: organs ?? existingDonor[0].organs
       })
       .where(eq(donors.email, email));
 
     res.status(200).json({
-      isSuccess: true,
-      message:"Donors informations updated successfully!"
+      status: true,
+      message: "Donors informations updated successfully!"
     });
   } catch (error) {
     console.error("Error updating donor:", error);
-    res.status(500).json({ isSuccess: false, error: "Failed to update donor" });
+    res.status(500).json({ status: false, error: "Failed to update donor" });
   }
 };
 
@@ -126,12 +119,10 @@ export const getdonors = async (req: Request, res: Response) => {
 export const getDonorByLocationBloodAndType = async (req: Request, res: Response) => {
   const { location, blood, donationType } = req.params;
 
-  console.log({ location, blood, donationType });
-
   // Validate input parameters
   if (!validBloodGroups.includes(blood)) {
     res.json({
-      isSuccess: false,
+      status: false,
       message: "Invalid Blood Group",
     });
     return;
@@ -139,7 +130,7 @@ export const getDonorByLocationBloodAndType = async (req: Request, res: Response
 
   if (!validDonationTypes.includes(donationType)) {
     res.json({
-      isSuccess: false,
+      status: false,
       message: "Invalid Donation Type",
     });
     return;
@@ -202,19 +193,17 @@ export const getDonorByLocationBloodAndType = async (req: Request, res: Response
         ));
     }
 
-    console.log(donorsList);
-
     if (!donorsList || donorsList.length === 0) {
       res.status(200).json({
-        isSuccess: false,
+        status: false,
         error: "No Donors found for the given filters",
       });
       return;
     }
 
-    res.status(200).json({ isSuccess: true, donors: donorsList });
+    res.status(200).json({ status: true, donors: donorsList });
   } catch (error) {
     console.error("Error fetching donors:", error);
-    res.status(500).json({ isSuccess: false, error });
+    res.status(500).json({ status: false, error });
   }
 };

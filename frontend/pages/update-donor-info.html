@@ -7,18 +7,20 @@
     <title>Edit Donor Details</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-
         .glassmorphism {
-            backdrop-filter: blur(18px);
+            background-color: transparent;
+            backdrop-filter: blur(25px);
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
 
-<body class="min-h-screen flex items-center justify-center px-3 bg-center bg-cover" style="background-image: url('../assets/background.jpg');">
+<body class="overflow-hidden h-screen flex items-center justify-center px-3 bg-center bg-cover"
+    style="background-image: url('../assets/background.jpg');">
     <div class="glassmorphism max-w-lg w-full p-6">
         <div class="flex justify-center relative">
-            <a href="../index.html" class="absolute left-0 flex justify-start mb-5 items-center col-span-2 md:col-span-1">
+            <a href="../index.html"
+                class="absolute left-0 flex justify-start mb-5 items-center col-span-2 md:col-span-1">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     class="lucide lucide-chevron-left">
@@ -28,13 +30,14 @@
             <h2 class="text-2xl font-bold text-center">Edit Donor Details</h2>
         </div>
         <!-- Email Verification Form -->
-        <form id="otpForm" class="space-y-6 mt-3">
+        <form id="otp-form" class=" space-y-6 mt-3">
             <div class="flex flex-col gap-2">
                 <label for="email" class="block font-bold text-gray-700">Email:</label>
+                <input type="text" name="name" id="name" value="" hidden>
                 <input type="email" id="email" name="email" required
                     class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Enter your registered email" />
-                <button type="button" id="send-otp" onclick="sendOTP()"
+                <button type="button" id="send-otp-btn" onclick="sendOTP(false)"
                     class="bg-gray-800 text-white py-2 px-4 rounded-md hover:bg-gray-500 w-fit self-end mt-4 transition-all duration-300">
                     Send OTP
                 </button>
@@ -46,37 +49,37 @@
                     placeholder="Enter the OTP sent to your email" />
                 <button type="button" id="verify-otp-btn"
                     class="bg-gray-800 text-white py-2 px-4 mt-2 rounded-md hover:bg-gray-500 w-fit self-end transition-all duration-300"
-                    onclick="verifyOTP()">
+                    onclick="verifyOTP(false)">
                     Verify OTP
                 </button>
             </div>
         </form>
 
         <!-- Edit Details Form -->
-        <div id="edit-details-form" class="hidden space-y-6">
+        <div id="input-form" class="hidden space-y-6">
             <div>
                 <label for="name" class="block font-bold text-gray-700">Name:</label>
-                <input type="text" id="name" name="name" required
+                <input type="text" id="name" name="name"
                     class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Enter your name" />
             </div>
             <div>
                 <label for="new-email" class="block font-bold text-gray-700">New Email:</label>
-                <input type="email" id="new-email" name="newEmail" required
+                <input type="email" id="new-email" name="newEmail"
                     class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Enter your Email" />
             </div>
             <div class="flex justify-center w-full space-x-2">
                 <div class="w-1/2">
                     <label for="mobile" class="block font-bold text-gray-700">Mobile Number:</label>
-                    <input type="text" id="mobile" name="mobile" required
+                    <input type="text" id="mobile" name="mobile"
                         class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="Enter your mobile number" />
                 </div>
                 <div class="w-1/2">
                     <label for="district" class="block font-bold text-gray-700">Location:</label>
-                    <select id="district" required name="district" class="p-2 border border-gray-300 rounded-md w-full">
-                        <option value="All">All</option>
+                    <select id="district" name="district" class="p-2 border border-gray-300 rounded-md w-full">
+                        <option value="">Select If Need to updated</option>
                         <option value="Ariyalur">Ariyalur</option>
                         <option value="Chengalpattu">Chengalpattu</option>
                         <option value="Chennai">Chennai</option>
@@ -123,6 +126,7 @@
                     <label for="blood-group" class="block font-bold text-gray-700">Blood Group:</label>
                     <select id="blood-group" name="bloodGroup"
                         class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Select If Need to updated</option>
                         <option value="A+ve">A+ve</option>
                         <option value="B+ve">B+ve</option>
                         <option value="O+ve">O+ve</option>
@@ -135,12 +139,34 @@
                 </div>
                 <div class="w-1/2">
                     <label for="donation-type" class="block font-bold text-gray-700">Donation Type:</label>
-                    <select id="donation-type" name="donationType"
+                    <select id="donation-type" name="donationType" onchange="handleDonationTypeChange()"
                         class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Select (if updating)</option>
                         <option value="Blood">Blood</option>
                         <option value="Organ">Organ</option>
                         <option value="Both">Both</option>
                     </select>
+                </div>
+            </div>
+            <div id="organ-select-container" class="hidden">
+                <label for="Organ-Type" class="block font-bold">Organ Type</label>
+                <div class="flex flex-col sm:flex-row gap-3 pt-3">
+                    <label>
+                        <input type="checkbox" name="organs" value="Heart" class="mr-1">
+                        Heart
+                    </label>
+                    <label>
+                        <input type="checkbox" name="organs" value="Liver" class="mr-1">
+                        Liver
+                    </label>
+                    <label>
+                        <input type="checkbox" name="organs" value="Kidney" class="mr-1">
+                        Kidney
+                    </label>
+                    <label>
+                        <input type="checkbox" name="organs" value="Eye" class="mr-1">
+                        Eye
+                    </label>
                 </div>
             </div>
             <button onclick="updateData()"
@@ -149,7 +175,8 @@
             </button>
         </div>
     </div>
-    <script src="../scripts//update.js"></script>
+    <script src="../scripts/otpVerify.js"></script>
+    <script src="../scripts/update.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 

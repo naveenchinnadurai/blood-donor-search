@@ -5,11 +5,11 @@ const router = express.Router();
 
 router.get("/", getdonors);
 
-router.put("/:email",updateDonor)
-
 router.get("/check", checkRoute);
 
 router.get("/:location/:blood/:donationType", getDonorByLocationBloodAndType);
+
+router.put("/:email",updateDonor)
 
 router.post("/", registerDonor);
 
