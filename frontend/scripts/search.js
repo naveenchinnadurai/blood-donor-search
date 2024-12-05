@@ -17,7 +17,7 @@ document.getElementById("search-btn").addEventListener("click", function () {
     console.log(searchData);
     async function fetchDonors(location, bloodGroup, donationType) {
         try {
-            const response = await fetch(`https://finer-albacore-amazed.ngrok-free.app/api/v1/donors/${location}/${bloodGroup}/${donationType}`, {
+            const response = await fetch(`http://localhost:7000/api/v1/donors/${location}/${bloodGroup}/${donationType}`, {
                 method: 'GET',
                 headers: {
                     'ngrok-skip-browser-warning': 'true',
@@ -31,6 +31,11 @@ document.getElementById("search-btn").addEventListener("click", function () {
             return;
         } catch (error) {
             console.log('Error fetching donors:', error);
+            Swal.fire({
+                icon: "error",
+                title:"Error",
+                text: "Error Fetching data, try again!"
+            });
         }
     }
     fetchDonors(searchData.district, searchData.bloodGroup, searchData.donationType)

@@ -21,7 +21,7 @@ document.getElementById('input-form').addEventListener('submit', function (e) {
 
 async function createDonor(data) {
     try {
-        const response = await fetch(`https://finer-albacore-amazed.ngrok-free.app/api/v1/donors/`, {
+        const response = await fetch(`http://localhost:7000/api/v1/donors/`, {
             method: 'POST',
             headers: {
                 'ngrok-skip-browser-warning': 'true',
@@ -55,6 +55,11 @@ async function createDonor(data) {
 
         return;
     } catch (error) {
+        Swal.fire({
+            icon: "error",
+            title:"Error",
+            text: "Error Creating Donor, Try again!"
+        });
         console.error('Error fetching donors:', error);
     }
 }

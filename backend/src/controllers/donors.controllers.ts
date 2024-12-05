@@ -95,7 +95,7 @@ export const updateDonor = async (req: Request, res: Response) => {
 
     res.status(200).json({
       status: true,
-      message: "Donors informations updated successfully!"
+      message: "Donor's informations updated successfully!"
     });
   } catch (error) {
     console.error("Error updating donor:", error);

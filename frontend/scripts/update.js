@@ -36,7 +36,7 @@ const updateData = async () => {
     console.log(formData);
 
     try {
-        const response = await fetch(`https://finer-albacore-amazed.ngrok-free.app/api/v1/donors/${currEmail}`, {
+        const response = await fetch(`http://localhost:7000/api/v1/donors/${currEmail}`, {
             method: 'PUT',
             headers: {
                 'ngrok-skip-browser-warning': 'true',
@@ -62,6 +62,11 @@ const updateData = async () => {
         }
     } catch (error) {
         console.error('Error updating data:', error);
+        Swal.fire({
+            icon: "error",
+            title:"Error",
+            text: "Error Updating donor's info, try again!"
+        });
     }
 
 }
