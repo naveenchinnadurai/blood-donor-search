@@ -4,6 +4,7 @@
   "description": "A backend server for Blood Donation site.",
   "main": "server.ts",
   "scripts": {
+    "start":"node ./src/server.ts",
     "dev": "nodemon",
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push"
