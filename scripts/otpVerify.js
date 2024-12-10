@@ -35,7 +35,7 @@ const sendOTP = async (isNewDonor) => {
     sendOTPBtn.textContent = 'Sending...';
     const email = emailInput.value;
     try {
-        const response = await fetch('http://localhost:7000/api/v1/otp/send', {
+        const response = await fetch('https://finer-albacore-amazed.ngrok-free.app/api/v1/otp/send', {
             method: 'POST',
             headers: {
                 'ngrok-skip-browser-warning': 'true',
@@ -98,7 +98,7 @@ const verifyOTP = async (isNewDonor) => {
     }
 
     try {
-        const response = await fetch('http://localhost:7000/api/v1/otp/verify', {
+        const response = await fetch('https://finer-albacore-amazed.ngrok-free.app/api/v1/otp/verify', {
             method: 'POST',
             headers: {
                 'ngrok-skip-browser-warning': 'true',
