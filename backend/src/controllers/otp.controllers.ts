@@ -48,6 +48,8 @@ export const sendOTP = async (req: Request, res: Response) => {
             text: `Your OTP is: ${otp}, don't share it to anyone.\n\nThis OTP will expire in 5 minutes.`,
         });
 
+        console.log(otpStorage);
+
         res.status(200).json({ status: true, message: "OTP sent successfully" });
     } catch (error) {
         console.log(error)

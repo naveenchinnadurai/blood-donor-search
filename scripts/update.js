@@ -30,8 +30,8 @@ const updateData = async () => {
         organs: data.organs
     };
 
-    if(formData.donationType === "Blood"){
-        formData.organs=["null"]
+    if (formData.donationType === "Blood") {
+        formData.organs = ["null"]
     }
     console.log(formData);
 
@@ -61,12 +61,21 @@ const updateData = async () => {
             });
         }
     } catch (error) {
-        console.error('Error updating data:', error);
-        Swal.fire({
-            icon: "error",
-            title:"Error",
-            text: "Error Updating donor's info, try again!"
-        });
+        if (error.name === "TypeError" && error.message === "Failed to fetch") {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Server Cannot be reached or No internet Connection"
+            })
+        } else {
+            console.error(error);
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Error Updating donor's info, try again!"
+            });
+        }
+        return;
     }
 
 }

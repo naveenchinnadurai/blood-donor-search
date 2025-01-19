@@ -30,12 +30,21 @@ document.getElementById("search-btn").addEventListener("click", function () {
             displayDonorCards(data.donors);
             return;
         } catch (error) {
-            console.log('Error fetching donors:', error);
-            Swal.fire({
-                icon: "error",
-                title:"Error",
-                text: "Error Fetching data, try again!"
-            });
+            if (error.name === "TypeError" && error.message === "Failed to fetch") {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "Server Cannot be reached or No internet Connection"
+                })
+            } else {
+                console.log(error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "Error Searching data, try again!"
+                });
+            }
+            return;
         }
     }
     fetchDonors(searchData.district, searchData.bloodGroup, searchData.donationType)

@@ -13,23 +13,23 @@ const sendOTP = async (isNewDonor) => {
         const emailValue = emailInput.value.trim();
         const nameValue = nameInput.value.trim();
 
-        if(!emailValue || !nameValue) {
+        if (!emailValue || !nameValue) {
             Swal.fire({
                 icon: "error",
-                title:"Required",
+                title: "Required",
                 text: "Email and Name cannot be empty!!"
             });
-            return ;
+            return;
         }
-    }else{
+    } else {
         const emailValue = emailInput.value.trim();
-        if(!emailValue) {
+        if (!emailValue) {
             Swal.fire({
                 icon: "error",
-                title:"Required",
+                title: "Required",
                 text: "Email cannot be empty!!"
             });
-            return ;
+            return;
         }
     }
     sendOTPBtn.textContent = 'Sending...';
@@ -61,12 +61,21 @@ const sendOTP = async (isNewDonor) => {
             Swal.fire('Error sending OTP');
         }
     } catch (error) {
-        console.error('Error sending OTP:', error);
-        Swal.fire({
-            icon: "error",
-            title:"Error",
-            text: "Error sending OTP, try again!"
-        });
+        if (error.name === "TypeError" && error.message === "Failed to fetch") {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Server Cannot be reached or No internet Connection"
+            })
+        } else {
+            console.error('Error sending OTP:', error);
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Error sending OTP, try again!"
+            });
+        }
+        return;
     } finally {
         sendOTPBtn.textContent = 'Resend OTP';
     }
@@ -77,13 +86,13 @@ const verifyOTP = async (isNewDonor) => {
     verifyBtn.textContent = "verifing OTP"
     const otp = otpInput.value;
 
-    if(!otp.trim()){
+    if (!otp.trim()) {
         Swal.fire({
             icon: "error",
             title: "Required",
             text: "OTP cannot be empty"
         });
-        return ;
+        return;
     }
 
     const email = emailInput.value;
@@ -127,11 +136,20 @@ const verifyOTP = async (isNewDonor) => {
             });
         }
     } catch (error) {
-        console.error('Error verifying OTP:', error);
-        Swal.fire({
-            icon: "error",
-            title:"Error",
-            text: "Error Verifying OTP, try again!"
-        })
+        if (error.name === "TypeError" && error.message === "Failed to fetch") {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "No internet connection. Please check your network."
+            })
+        } else {
+            console.error("An error occurred:", error.message);
+            console.error('Error verifying OTP:', error);
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Error Verifying OTP, try again!"
+            })
+        }
     }
 };
