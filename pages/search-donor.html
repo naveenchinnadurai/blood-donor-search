@@ -6,13 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Donors</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="@sweetalert2/theme-borderless/borderless.css">
     <style>
         .glassmorphism {
             background-color: transparent;
             backdrop-filter: blur(25px);
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        
+
         #donor-cards::-webkit-scrollbar {
             width: 8px;
         }
@@ -32,12 +33,13 @@
     </style>
 </head>
 
-<body style="background-image: url('../assets/background.jpg');" class="bg-cover bg-center md:h-screen flex justify-center p-4 sm:p-10 ">
+<body style="background-image: url('../assets/background.jpg');"
+    class="bg-cover bg-center md:h-screen flex justify-center p-4 sm:p-10 ">
     <!-- Search Donors Section -->
-    <section
-        class="bg-slate-500 border-none bg-opacity-50 p-4 lg:p-8 w-full rounded-lg glassmorphism">
+    <section class="bg-slate-500 border-none bg-opacity-50 p-4 lg:p-8 w-full rounded-lg glassmorphism">
         <div class="flex justify-center items-center relative">
-            <a href="../index.html" class="absolute left-0 top-1 flex justify-start items-center col-span-2 md:col-span-1">
+            <a href="../index.html"
+                class="absolute left-0 top-1 flex justify-start items-center col-span-2 md:col-span-1">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     class="lucide lucide-chevron-left">
@@ -130,6 +132,8 @@
         </div>
     </section>
     <script src="../scripts/search.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="sweetalert2/dist/sweetalert2.min.js"></script>
 </body>
 
 </html>

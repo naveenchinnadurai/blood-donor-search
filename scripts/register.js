@@ -55,12 +55,20 @@ async function createDonor(data) {
 
         return;
     } catch (error) {
-        Swal.fire({
-            icon: "error",
-            title:"Error",
-            text: "Error Creating Donor, Try again!"
-        });
-        console.error('Error fetching donors:', error);
+        if (error.name === "TypeError" && error.message === "Failed to fetch") {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Server Cannot be reached or No internet Connection"
+            })
+        } else {
+            console.error(error);
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Error Creating Donor, Try again!"
+            });
+        }
     }
 }
 
