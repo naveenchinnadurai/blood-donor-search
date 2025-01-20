@@ -42,7 +42,7 @@ export const sendOTP = async (req: Request, res: Response) => {
         otpStorage[email] = { otp, expiresAt, timeoutId };
 
         await transporter.sendMail({
-            from: "dev.iamnaveen@gmail.com",
+            from: "organdonationbloodand@gmail.com",
             to: email,
             subject: "Your One-Time Password",
             text: `Your OTP is: ${otp}, don't share it to anyone.\n\nThis OTP will expire in 5 minutes.`,
